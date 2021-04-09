@@ -8,18 +8,18 @@ class IR {
     
     int one(int channel) {  
         Wire.beginTransmission(0x01);
-        Wire.write(channel); Wire.endTransmission();
+          Wire.write(channel); Wire.endTransmission();
         Wire.requestFrom(0x01,1);
         
         while(!Wire.available());
         return Wire.read();
     }
     
-    int maximum() {
+    int maxVal() {
       return one(9);
     }
     
-    int maximum_ch() {
+    int maxiChannel() {
       return one(8);
     }
 };
