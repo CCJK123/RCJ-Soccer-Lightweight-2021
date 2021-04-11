@@ -4,8 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\MinGW\\**",
-                "C:\\Program Files (x86)\\Arduino\\**"
+                "C:/MinGW/**",
+                "C:/Program Files (x86)/Arduino/**",
+                "C:/Users/Jo/Documents/Arduino/libraries/**"
             ],
             "defines": [
                 "USBCON"
