@@ -1,4 +1,4 @@
-#include <temt.h>
+#include "temt.h"
 
 Temt temt(A0, 670);
 
