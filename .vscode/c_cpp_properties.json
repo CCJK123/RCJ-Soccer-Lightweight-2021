@@ -1,12 +1,12 @@
 {
-    "configurations": [
+     "configurations": [
         {
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:/MinGW/**",
                 "C:/Program Files (x86)/Arduino/**",
-                "C:/Users/Jo/Documents/Arduino/libraries/**"
+                "C:/Users/User/Documents/Arduino/libraries/**"
             ],
             "defines": [
                 "USBCON"
