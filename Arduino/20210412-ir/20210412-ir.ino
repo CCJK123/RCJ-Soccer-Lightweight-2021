@@ -8,7 +8,7 @@ class IR {
     
     int one(int channel) {  
         Wire.beginTransmission(0x01);
-          Wire.write(channel); Wire.endTransmission();
+        Wire.write(channel); Wire.endTransmission();
         Wire.requestFrom(0x01,1);
         
         while(!Wire.available());
