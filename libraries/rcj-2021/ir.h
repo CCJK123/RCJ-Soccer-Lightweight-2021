@@ -8,7 +8,7 @@ class IR {
     IR();
     int one(int channel);
     int maxVal();
-    int maxiChannel();
+    int maxChannel();
 };
 
 #endif
