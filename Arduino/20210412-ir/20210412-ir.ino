@@ -1,28 +1,4 @@
-#include <Wire.h> 
-
-class IR {
-  public:
-    IR() {
-     Wire.begin();
-    }
-    
-    int one(int channel) {  
-        Wire.beginTransmission(0x01);
-        Wire.write(channel); Wire.endTransmission();
-        Wire.requestFrom(0x01,1);
-        
-        while(!Wire.available());
-        return Wire.read();
-    }
-    
-    int maxVal() {
-      return one(9);
-    }
-    
-    int maxChannel() {
-      return one(8);
-    }
-};
+#include <ir.h>
 
 IR ir;
 
