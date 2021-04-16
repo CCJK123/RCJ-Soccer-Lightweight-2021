@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "temt.h"
 
 Temt::Temt(int pin, int threshold) {
