@@ -6,7 +6,7 @@
 class Ultrasound {
   public:
     Ultrasound(int pin);
-    int update();
+    int getDist();
   private:
     int _pin;
 };
