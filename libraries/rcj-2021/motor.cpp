@@ -9,10 +9,12 @@ Motor::Motor(int pin1, int pin2) {
 
 void Motor::setSpeed(double speed) {
   if (speed >= 0) {
-    analogWrite(_pin1, speed * 255);
-    analogWrite(_pin2, 0);
-  } else {
+    // Turn Motor Clockwise
     analogWrite(_pin1, 0);
-    analogWrite(_pin2, -speed * 255);
+    analogWrite(_pin2, speed * 255);
+  } else {
+    // Turn Motor Anti-clockwise
+    analogWrite(_pin1, -speed * 255);
+    analogWrite(_pin2, 0);
   }
 }
