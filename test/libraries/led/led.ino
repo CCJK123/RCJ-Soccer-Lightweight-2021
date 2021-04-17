@@ -1,14 +1,13 @@
-// Set all the LEDs to a random color.
-#include <AddressableLEDStrip.h>
+#include <led.h>
 
-int pin = 6;
-
-AddressableLEDStrip strip = AddressableLEDStrip(pin, pin, 32);
+LED<6> led;
 
 void setup() {
 }
 
 void loop() {
-  strip.set_all_leds(0, 0, 0);
-  strip.send();
+//  led.on();
+  delay(1000);
+//  led.off();
+  delay(1000);
 }
