@@ -1,21 +1,13 @@
-#include <Adafruit_NeoPixel.h>
+#include <led.h>
 
-int pin = 12;
-
-Adafruit_NeoPixel ring(32, pin, NEO_GRB + NEO_KHZ800);
+LED led(12);
 
 void setup() {
-  ring.begin();
 }
 
 void loop() {
-  ring.clear();
-  ring.show();
+  led.on();
   delay(1000);
-  
-  for (int i = 0; i<32; i++) {
-    ring.setPixelColor(i, 255, 255, 255);
-  }
-  ring.show();
+  led.off();
   delay(1000);
 }
