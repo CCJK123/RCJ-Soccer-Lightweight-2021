@@ -2,8 +2,8 @@
 RoboCupJunior Soccer Lightweight Code by Raffles Institution's 2021 Soccer Team
 
 ## Usage
-### Libraries
-* Copy all the contents in the libraries folder to the Arduino libraries folder
+### Libraries Test Files
+* Copy relevant files in the libraries folder to the respective library test file folder
 
 ### External Libraries added using Git Submodules
 * Fetch data from submodules
