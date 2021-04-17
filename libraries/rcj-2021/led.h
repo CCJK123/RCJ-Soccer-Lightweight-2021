@@ -4,12 +4,13 @@
 #ifndef led_h
 #define led_h
 
+template <int pin>
 class LED {
   public:
-    LED(int pin);
+    LED();
     void on();
+    void off();
   private:
-    int _pin;
     CRGB leds[32];
 };
 
