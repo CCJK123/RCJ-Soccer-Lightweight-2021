@@ -1,12 +1,36 @@
 #include <FastLED.h>
-#define LED_PIN     6
-#define NUM_LEDS    32
-CRGB leds[NUM_LEDS];
+
+template <int pin>
+class LED {
+  public:
+    LED() {
+      FastLED.addLeds<WS2812, pin, GRB>(leds, 32);
+    }
+
+    void on() {
+      for (int i = 0; i <= 32; i++) {
+        leds[i] = CRGB::White;  // CRGB(255, 255, 255) also works
+      }
+      FastLED.show();
+    }
+
+    void off() {
+      FastLED.clear();
+      FastLED.show();
+    }
+
+  private:
+    CRGB leds[32];
+};
+
+LED<6> led;
+
 void setup() {
-  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
-  for (int i = 0; i <= 32; i++) {
-    leds[i] = CRGB(255, 255, 255);
-  }
-  FastLED.show();
 }
-void loop() {}
+
+void loop() {
+  led.on();
+  delay(1000);
+  led.off();
+  delay(1000);
+}
