@@ -7,6 +7,11 @@ Motor::Motor(int pin1, int pin2) {
   _pin2 = pin2;
 }
 
+Motor::Motor(Motor &motor) {
+  _pin1 = motor._pin1;
+  _pin2 = motor._pin2;
+}
+
 void Motor::setSpeed(double speed) {
   if (speed >= 0) {
     // Turn Motor Clockwise

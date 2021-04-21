@@ -6,6 +6,7 @@
 class Motor {
   public:
     Motor(int pin1, int pin2);
+    Motor(Motor &motor);
     void setSpeed(double speed);
   private:
     int _pin1;
