@@ -8,7 +8,7 @@ class Base {
   public:
     Base(Motor motorFrontLeft, Motor motorFrontRight, Motor motorBackLeft, Motor motorBackRight);
     void rotate(double speed);
-    void move(double speed, float angleDeg);
+    void move(double speed, float angleDeg, double rotationRate);
   private:
     Motor _motorFrontLeft;
     Motor _motorFrontRight;
