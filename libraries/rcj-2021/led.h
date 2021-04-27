@@ -1,16 +1,17 @@
 #include "Arduino.h"
-#include <FastLED.h>
+#include <Adafruit_NeoPixel.h>
 
 #ifndef led_h
 #define led_h
 
-class LED {
+class LED : public Adafruit_NeoPixel {
   public:
     LED(int pin);
-    void on();
+    void on();  
+    void off();
   private:
     int _pin;
-    CRGB leds[32];
+    
 };
 
 #endif

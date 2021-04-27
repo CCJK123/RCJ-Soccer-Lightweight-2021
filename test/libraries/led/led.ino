@@ -1,10 +1,13 @@
-#include "led.h"
-#include <FastLED.h>
+#include <led.h>
 
-LED led(6);
+LED led(12);
 
-void setup() {}
+void setup() {
+}
 
 void loop() {
   led.on();
+  delay(1000);
+  led.off();
+  delay(1000);
 }
