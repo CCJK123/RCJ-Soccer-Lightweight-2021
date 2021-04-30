@@ -18,3 +18,6 @@ RoboCupJunior Soccer Lightweight Code by Raffles Institution's 2021 Soccer Team
 
 ## External Libraries Used
 * [Adafruit NeoPixel Library](https://github.com/adafruit/Adafruit_NeoPixel) for WS2812B LED Ring
+
+## External Human Used
+* [Wang Rongfei](https://github.com/xrowii)
