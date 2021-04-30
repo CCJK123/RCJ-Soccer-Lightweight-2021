@@ -1,5 +1,7 @@
 #define ph Serial.println("hi");
-#define reg 0x8B
+#define reg 0x71
+// 0x57 raw gyro z
+// 0x71 yaw
 typedef unsigned char uc;
 
 byte calibGyro[7];
@@ -39,7 +41,7 @@ void loop() {
     bruh = true;
   }
   Serial1.write(readReq, 7);
-   Serial1.write(calibGyro, 7);
+  Serial1.write(calibGyro, 7);
 }
 
 enum st {
@@ -101,12 +103,12 @@ void serialEvent1() {
       } else regPos--;
       break;
     case CS1:
-      //int16_t i;
-      //i = (((int16_t) b1) << 8) | ((int16_t) b2);
-      float i;
-      i = b1 << 24 | b2 << 16 | b3 << 8 | b4;
-      Serial.println(i);
-      //Serial.println((double) i / 91.02222);
+      int16_t i; // for yaw and raw gyro z
+      i = (((int16_t) b1) << 8) | ((int16_t) b2); // for yaw and raw gyro z
+      //float i; // for gyro bias z
+      //i = b1 << 24 | b2 << 16 | b3 << 8 | b4; // for gyro bias z
+//      Serial.println(i); // for raw gyro z 
+      Serial.println((double) i / 91.02222); // for yaw
     
       state = CS2;
       break;
