@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "ir.h"
 
 IR::IR() {

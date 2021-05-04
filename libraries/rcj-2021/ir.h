@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include <Wire.h> 
 
 #ifndef temt_h
