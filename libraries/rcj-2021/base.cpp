@@ -8,8 +8,6 @@ Base::Base(Motor motorFrontLeft, Motor motorFrontRight, Motor motorBackLeft, Mot
 {}
 
 void Base::rotate(double speed) {
-  // Change speed such that +ve is clockwise robot rotation
-  speed *= -1;
   _motorFrontLeft.setSpeed(speed);
   _motorFrontRight.setSpeed(speed);
   _motorBackLeft.setSpeed(speed);
