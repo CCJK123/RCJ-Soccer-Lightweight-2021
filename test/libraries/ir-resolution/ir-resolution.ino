@@ -1,13 +1,15 @@
 #include <ir.h>
 
-IR ir(0);
+IR irFront(0);
+IR irBack(1);
 
 int maxVal, maxChannel, leftHigh, rightHigh;
 double angle;
 double diff, diffLeft, diffRight;
 
 //int irAngles[] = {-1, 270, 300, 330, 0, 30, 60, 90};
-int irAngles[] = {-1, 90, 60, 30, 0, 330, 300, 270};
+int frontDeg[] = {-1, 90, 60, 30, 0, 330, 300, 270};
+int backDeg[] = {-1, 270, 240, 210, 180, 150, 120, 90};
 
 void setup() {
   // put your setup code here, to run once:
@@ -15,28 +17,64 @@ void setup() {
 }
 
 void loop() {
-  // get raw readings
-  maxVal = ir.maxVal(); maxChannel = ir.maxChannel();
-//  Serial.print(ir.maxVal()); Serial.print(" "); Serial.println(ir.maxChannel());
-  diff = 15.0; // half of the fov (30 deg)
-
-  if (maxChannel != 1) {
-    leftHigh = ir.one(maxChannel + 1);
+  if (irFront.maxVal() > irBack.maxVal()) {
+    // get raw readings
+    maxVal = irFront.maxVal(); maxChannel = irFront.maxChannel();
+  //  Serial.print(irFront.maxVal()); Serial.print(" "); Serial.println(irFront.maxChannel());
+    diff = 15.0; // half of the fov (30 deg)
+  
+    if (maxChannel != 7) {
+      leftHigh = irFront.one(maxChannel + 1);
+    } else {
+      diff = 0;
+      leftHigh = irBack.one(1);
+    }
+  
+    if (maxChannel != 1) {
+      rightHigh = irFront.one(maxChannel - 1);
+    } else {
+      diff = 0;
+      rightHigh = irBack.one(7);
+    }
+   
+    diffLeft = maxVal - leftHigh;
+    diffRight = maxVal - rightHigh;
+  
+    if (leftHigh > rightHigh) { // ball is to the left
+      angle = frontDeg[maxChannel]-diff*(1-diffLeft/diffRight);
+    } else { // ball is to the right
+      angle = frontDeg[maxChannel]+diff*(1-diffRight/diffLeft);
+    }
+  } else {
+    // get raw readings
+    maxVal = irBack.maxVal(); maxChannel = irBack.maxChannel();
+  //  Serial.print(irBack.maxVal()); Serial.print(" "); Serial.println(irBack.maxChannel());
+    diff = 15.0; // half of the fov (30 deg)
+  
+    if (maxChannel != 7) {
+      leftHigh = irBack.one(maxChannel + 1);
+    } else {
+      diff = 0;
+      leftHigh = irFront.one(1);
+    }
+  
+    if (maxChannel != 1) {
+      rightHigh = irBack.one(maxChannel - 1);
+    } else {
+      diff = 0;
+      rightHigh = irFront.one(7);
+    }
+   
+    diffLeft = maxVal - leftHigh;
+    diffRight = maxVal - rightHigh;
+  
+    if (leftHigh > rightHigh) { // ball is to the left
+      angle = backDeg[maxChannel]-diff*(1-diffLeft/diffRight);
+    } else { // ball is to the right
+      angle = backDeg[maxChannel]+diff*(1-diffRight/diffLeft);
+    }
   }
-
-  if (maxChannel != 7) {
-    rightHigh = ir.one(maxChannel - 1);
-  }
- 
-  diffLeft = maxVal - leftHigh;
-  diffRight = maxVal - rightHigh;
-
-  if (leftHigh > rightHigh) { // ball is to the left
-    angle = irAngles[maxChannel]-diff*(1-diffLeft/diffRight);
-  } else { // ball is to the right
-    angle = irAngles[maxChannel]+diff*(1-diffRight/diffLeft);
-  }
-
+  
   if (angle<0) {
     angle += 360;
   }
