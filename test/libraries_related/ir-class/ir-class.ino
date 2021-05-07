@@ -24,6 +24,12 @@ class IR {
     }
 };
 
+/*
+Wire Connections
+Yellow - SCL - Arduino A5 Pin
+Brown - SDA - Arduino A4 Pin 
+*/
+
 IR ir;
 
 void setup() {
@@ -35,7 +41,4 @@ void loop() {
   // put your main code here, to run repeatedly:
   Serial.println(ir.maximum());
   delay(10);
-} 
-
-// yellow scl a5
-// brown sda a4 
+}

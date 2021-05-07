@@ -22,4 +22,4 @@ void loop() {
   Serial.print(ir.maxChannel(i2cPort));
   Serial.print("\n");
   delay(100);
-} 
+}
