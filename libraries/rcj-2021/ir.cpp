@@ -1,17 +1,16 @@
 #include "ir.h"
 
-IR::IR() {}
-
-void IR::begin(int wire) {
-  if (wire == 0) {
-    Wire.begin();
-  } else {
-    Wire1.begin();
-  }
+IR::IR(int wire) {
+    _wire = wire;
+    if (_wire == 0) {
+        Wire.begin();
+    } else {
+        Wire1.begin();
+    }
 }
 
-int IR::getData(int wire, int channel) {
-  if (wire == 0) {
+int IR::one(int channel) {
+  if (_wire == 0) {
     Wire.beginTransmission(0x01);
     Wire.write(channel); Wire.endTransmission();
     Wire.requestFrom(0x01,1);
@@ -28,10 +27,10 @@ int IR::getData(int wire, int channel) {
   }
 }
 
-int IR::maxVal(int wire) {
-  return getData(wire, 9);
+int IR::maxVal() {
+  return one(9);
 }
 
-int IR::maxChannel(int wire) {
-    return getData(wire, 8);
+int IR::maxChannel() {
+    return one(8);
 }
