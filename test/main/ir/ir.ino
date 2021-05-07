@@ -7,7 +7,7 @@ void setup() {
   Serial.begin(9600);
 }
 
-IR ir_front;
+IR ir_front(0);
 int to_query[]={0, 5, 6, 7, 1, 2, 3, 4};
 int angles_front[]={0, 90, 60, 30, 0, 330, 300, 270};
 
@@ -26,11 +26,11 @@ void ir_ball(){
 //  if(front_high > back_high){ //ball in front
   if (true) {
     diff = 15.0;
-    if(front_ch != 7) left_high = ir_front.one(to_query[front_ch+1]); //check sensor to the left
+    if(front_ch != 7) left_high = ir_front.one(front_ch+1); //check sensor to the left
     else { // left_high = ir_backto.one(to_query[1]); 
       diff = 0.0; } // use other IR
 
-    if(front_ch != 1) right_high = ir_front.one(to_query[front_ch-1]); //check sensor to the right
+    if(front_ch != 1) right_high = ir_front.one(front_ch-1); //check sensor to the right
     else { // right_high = ir_back.one(to_query[7]);
       diff = 0.0; } // use other IR
  
@@ -61,7 +61,7 @@ void ir_ball(){
 //    if(ball < 0) ball += 360.0;
   }
   #ifdef DB_IR
-    for(int i = 1; i <= 7; i++){ Serial.print(ir_front.one(to_query[i])); Serial.print(" "); }
+    for(int i = 1; i <= 7; i++){ Serial.print(ir_front.one(i)); Serial.print(" "); }
     Serial.println();
 //    for(int i = 1; i <= 7; i++){ Serial.print(ir_back.one(to_query[i])); Serial.print(" "); }
 //    Serial.println();
@@ -80,4 +80,5 @@ void ir_ball(){
 void loop() {
   // put your main code here, to run repeatedly:
   ir_ball();
+  delay(10);
 }
