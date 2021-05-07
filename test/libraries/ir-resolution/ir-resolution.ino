@@ -1,90 +1,82 @@
 #include <ir.h>
 
-IR irFront(0);
-IR irBack(1);
+IR irFront(0); // uses Wire
+IR irBack(1); // uses Wire1
 
-int maxVal, maxChannel, leftHigh, rightHigh;
-double angle;
+int maxVal, maxChannel, leftHigh, rightHigh; // readings from sensor
 double diff, diffLeft, diffRight;
+double angle; // final output
 
-//int irAngles[] = {-1, 270, 300, 330, 0, 30, 60, 90};
-int frontDeg[] = {-1, 90, 60, 30, 0, 330, 300, 270};
-int backDeg[] = {-1, 270, 240, 210, 180, 150, 120, 90};
+int frontDeg[] = {-1, 90, 60, 30, 0, 330, 300, 270}; // front ir
+int backDeg[] = {-1, 270, 240, 210, 180, 150, 120, 90}; // back ir
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
 }
 
 void loop() {
-  if (irFront.maxVal() > irBack.maxVal()) {
+  if (irFront.maxVal() > irBack.maxVal()) { // ball is in front
+
     // get raw readings
-    maxVal = irFront.maxVal(); maxChannel = irFront.maxChannel();
-  //  Serial.print(irFront.maxVal()); Serial.print(" "); Serial.println(irFront.maxChannel());
-    diff = 15.0; // half of the fov (30 deg)
+    maxVal = irFront.maxVal();
+    maxChannel = irFront.maxChannel();
+
+    diff = 15.0; // half of the difference between each pair of channels (30 deg)
   
     if (maxChannel != 7) {
-      leftHigh = irFront.one(maxChannel + 1);
-    } else {
-      diff = 0;
-      leftHigh = irBack.one(1);
+      leftHigh = irFront.one(maxChannel + 1); // checks the channel to the left (+1 because it is mounted upside down)
+    } else { // maxChannel is left most channel
+      leftHigh = irBack.one(1); // channel to the left is the right most channel of the back ir
+      diff = 0.0; // no difference between the left most channel and the right most channel of the back ir
     }
-  
     if (maxChannel != 1) {
-      rightHigh = irFront.one(maxChannel - 1);
-    } else {
-      diff = 0;
-      rightHigh = irBack.one(7);
+      rightHigh = irFront.one(maxChannel - 1); // checks the channel to the right (-1 because it is mounted upside down)
+    } else { // maxChannel is right most channel
+      rightHigh = irBack.one(7); // channel to the right is the left most channel of the back ir
+      diff = 0.0; // no difference between the right most channel and the left most channel of the back ir
     }
    
-    diffLeft = maxVal - leftHigh;
-    diffRight = maxVal - rightHigh;
+    diffLeft = maxVal - leftHigh; diffRight = maxVal - rightHigh; // get the difference between the maximum reading and the reading of the channels adjacent to it
   
     if (leftHigh > rightHigh) { // ball is to the left
-      angle = frontDeg[maxChannel]-diff*(1-diffLeft/diffRight);
+      angle = frontDeg[maxChannel] - diff * (1 - diffLeft / diffRight);
     } else { // ball is to the right
-      angle = frontDeg[maxChannel]+diff*(1-diffRight/diffLeft);
+      angle = frontDeg[maxChannel] + diff * (1 - diffRight / diffLeft);
     }
-  } else {
+
+  } else { // ball is behind
+
     // get raw readings
-    maxVal = irBack.maxVal(); maxChannel = irBack.maxChannel();
-  //  Serial.print(irBack.maxVal()); Serial.print(" "); Serial.println(irBack.maxChannel());
-    diff = 15.0; // half of the fov (30 deg)
+    maxVal = irBack.maxVal();
+    maxChannel = irBack.maxChannel();
+
+    diff = 15.0; // half of the difference between each pair of channels (30 deg)
   
     if (maxChannel != 7) {
-      leftHigh = irBack.one(maxChannel + 1);
-    } else {
-      diff = 0;
-      leftHigh = irFront.one(1);
+      leftHigh = irBack.one(maxChannel + 1); // checks the channel to the left (+1 because it is mounted upside down)
+    } else { // maxChannel is left most channel
+      leftHigh = irFront.one(1); // channel to the left is the right most channel of the front ir
+      diff = 0.0; // no difference between the left most channel and the right most channel of the front ir
     }
-  
     if (maxChannel != 1) {
-      rightHigh = irBack.one(maxChannel - 1);
-    } else {
-      diff = 0;
-      rightHigh = irFront.one(7);
+      rightHigh = irBack.one(maxChannel - 1); // checks the channel to the right (-1 because it is mounted upside down)
+    } else { // maxChannel is right most channel
+      rightHigh = irFront.one(7); // channel to the right is the left most channel of the front ir
+      diff = 0.0; // no difference between the right most channel and the left most channel of the front ir
     }
    
-    diffLeft = maxVal - leftHigh;
-    diffRight = maxVal - rightHigh;
+    diffLeft = maxVal - leftHigh; diffRight = maxVal - rightHigh; // get the difference between the maximum reading and the reading of the channels adjacent to it
   
     if (leftHigh > rightHigh) { // ball is to the left
-      angle = backDeg[maxChannel]-diff*(1-diffLeft/diffRight);
+      angle = backDeg[maxChannel] - diff * (1 - diffLeft / diffRight);
     } else { // ball is to the right
-      angle = backDeg[maxChannel]+diff*(1-diffRight/diffLeft);
+      angle = backDeg[maxChannel] + diff * (1 - diffRight / diffLeft);
     }
+
   }
-  
-  if (angle<0) {
-    angle += 360;
-  }
-//  Serial.print(maxVal);
-//  Serial.print(" ");
-//  Serial.print(maxChannel);
-//  Serial.print(" ");
+
+  if (angle < 0) angle += 360; // corrects negative angles
+
   Serial.println(angle);
   delay(100);
-} 
-
-// yellow scl a5
-// brown sda a4 
+}
