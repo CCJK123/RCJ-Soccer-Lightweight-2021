@@ -1,8 +1,8 @@
 #include "Arduino.h"
 #include <Wire.h> 
 
-#ifndef temt_h
-#define temt_h
+#ifndef ir_h
+#define ir_h
 
 class IR {
   public:
