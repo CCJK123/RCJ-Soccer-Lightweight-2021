@@ -8,8 +8,6 @@ Base::Base(Motor motorFrontLeft, Motor motorFrontRight, Motor motorBackLeft, Mot
 {}
 
 void Base::rotate(double speed) {
-  // Change speed such that +ve is clockwise robot rotation
-  speed *= -1;
   _motorFrontLeft.setSpeed(speed);
   _motorFrontRight.setSpeed(speed);
   _motorBackLeft.setSpeed(speed);
@@ -56,22 +54,22 @@ void Base::move(double speed, float angleDeg, double rotationRate) {
     if (rotationRate >= 0) {
       // Intention to rotate clockwise
       _motorFrontLeft.setSpeed(NESpeed);
-      _motorBackRight.setSpeed(NESpeedAdjusted);
+      _motorBackRight.setSpeed(-NESpeedAdjusted);
     } else {
       // Intention to rotate anticlockwise
       _motorFrontLeft.setSpeed(NESpeedAdjusted);
-      _motorBackRight.setSpeed(NESpeed);
+      _motorBackRight.setSpeed(-NESpeed);
     } 
   } else {
     // Intention to move in SW direction
     if (rotationRate >= 0) {
       // Intention to rotate clockwise
       _motorFrontLeft.setSpeed(NESpeedAdjusted);
-      _motorBackRight.setSpeed(NESpeed);
+      _motorBackRight.setSpeed(-NESpeed);
     } else {
       // Intention to rotate anticlockwise
       _motorFrontLeft.setSpeed(NESpeed);
-      _motorBackRight.setSpeed(NESpeedAdjusted);
+      _motorBackRight.setSpeed(-NESpeedAdjusted);
     }
   }
 
@@ -80,22 +78,22 @@ void Base::move(double speed, float angleDeg, double rotationRate) {
     // Intention to move in NW direction
     if (rotationRate >= 0) {
       // Intention to rotate clockwise
-      _motorFrontRight.setSpeed(NWSpeedAdjusted);
+      _motorFrontRight.setSpeed(-NWSpeedAdjusted);
       _motorBackLeft.setSpeed(NWSpeed);
     } else {
       // Intention to rotate anticlockwise
-      _motorFrontRight.setSpeed(NWSpeed);
+      _motorFrontRight.setSpeed(-NWSpeed);
       _motorBackLeft.setSpeed(NWSpeedAdjusted);
     }
   } else {
     // Intention to move in SE direction
     if (rotationRate >= 0) {
       // Intention to rotate clockwise
-      _motorFrontRight.setSpeed(NWSpeed);
+      _motorFrontRight.setSpeed(-NWSpeed);
       _motorBackLeft.setSpeed(NWSpeedAdjusted);
     } else {
       // Intention to rotate anticlockwise
-      _motorFrontRight.setSpeed(NWSpeedAdjusted);
+      _motorFrontRight.setSpeed(-NWSpeedAdjusted);
       _motorBackLeft.setSpeed(NWSpeed);
     }
   }

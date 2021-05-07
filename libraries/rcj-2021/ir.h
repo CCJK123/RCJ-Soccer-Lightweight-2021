@@ -7,9 +7,10 @@
 class IR {
   public:
     IR();
-    int one(int channel);
-    int maxVal();
-    int maxChannel();
+    void begin(int wire);
+    int getData(int wire, int channel);
+    int maxVal(int wire);
+    int maxChannel(int wire);
 };
 
 #endif
