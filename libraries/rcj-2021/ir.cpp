@@ -10,6 +10,12 @@ IR::IR(int wire) {
 }
 
 int IR::one(int channel) {
+    if (channel <= 7) {
+        // Channel:      1 2 3 4 5 6 7
+        // No. to Write: 5 6 7 1 2 3 4
+        int mapping[] = {5, 6, 7, 1, 2, 3, 4};
+        channel = mapping[channel-1];
+    }
   if (_wire == 0) {
     Wire.beginTransmission(0x01);
     Wire.write(channel); Wire.endTransmission();
@@ -28,7 +34,7 @@ int IR::one(int channel) {
 }
 
 int IR::maxVal() {
-  return one(9);
+    return one(9);
 }
 
 int IR::maxChannel() {
