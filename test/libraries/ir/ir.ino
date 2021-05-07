@@ -1,4 +1,4 @@
-#include "ir.h"
+#include <ir.h>
 
 /*
 Wire Connections
@@ -20,4 +20,3 @@ void loop() {
   Serial.print(ir.maxChannel());
   Serial.print("\n");
   delay(100);
-} 
