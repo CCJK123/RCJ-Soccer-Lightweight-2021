@@ -15,6 +15,6 @@ void loop() {
 
 void serialEvent1() {
   if (imu.decode()) {
-      Serial.println(imu.getYaw());
-   }
+    Serial.println(imu.getYaw());
+  }
 }

@@ -5,14 +5,14 @@
 #define orientation_h
 
 class Orientation : public UM7 {
-    public:
-        Orientation(HardwareSerial &serial);
-        bool decode();
-        float getYaw();
-        void zeroGyros();
-        void calibrateAcc();
-    private:
-        HardwareSerial *_serialPort;
+  public:
+    Orientation(HardwareSerial &serial);
+    bool decode();
+    float getYaw();
+    void zeroGyros();
+    void calibrateAcc();
+  private:
+    HardwareSerial *_serialPort;
 };
 
 #endif

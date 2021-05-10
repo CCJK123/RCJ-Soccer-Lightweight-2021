@@ -1,5 +1,11 @@
 #include <ir.h>
 
+/*
+Wire Connections
+Yellow - SCL - Arduino A5 Pin
+Brown - SDA - Arduino A4 Pin 
+*/
+
 IR ir(0); // 0 for Wire or 1 for Wire1
 
 void setup() {
@@ -14,7 +20,3 @@ void loop() {
   Serial.print(ir.maxChannel());
   Serial.print("\n");
   delay(100);
-} 
-
-// yellow scl a5
-// brown sda a4 
