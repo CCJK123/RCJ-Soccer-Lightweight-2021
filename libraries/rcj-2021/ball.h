@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include <ir.h> 
+#include "ir.h"
 
 #ifndef ball_h
 #define ball_h
