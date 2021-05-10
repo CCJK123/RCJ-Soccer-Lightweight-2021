@@ -13,3 +13,7 @@ int Temt::getVal() {
 double Temt::getPercent() {
   return double(analogRead(_pin))/_threshold;
 }
+
+int Temt::getThreshold() {
+  return _threshold;
+}

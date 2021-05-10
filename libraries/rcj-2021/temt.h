@@ -8,6 +8,7 @@ class Temt {
     Temt(int pin, int threshold);
     int getVal();
     double getPercent();
+    int getThreshold();
   private:
     int _pin;
     int _threshold;
