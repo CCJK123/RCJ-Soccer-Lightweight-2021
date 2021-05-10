@@ -9,6 +9,7 @@ class Temt {
     int getVal();
     double getPercent();
     int getThreshold();
+    bool isOnLine();
   private:
     int _pin;
     int _threshold;

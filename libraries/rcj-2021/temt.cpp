@@ -17,3 +17,7 @@ double Temt::getPercent() {
 int Temt::getThreshold() {
   return _threshold;
 }
+
+bool Temt::isOnLine() {
+  return Temt::getVal() > _threshold;
+}
