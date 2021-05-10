@@ -1,6 +1,6 @@
 #include "temt.h"
 
-Temt temt(A0);
+Temt temt(A0, 670);
 
 void setup() {
   // put your setup code here, to run once:

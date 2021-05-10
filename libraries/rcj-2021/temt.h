@@ -5,10 +5,9 @@
 
 class Temt {
   public:
-    Temt(int pin);
+    Temt(int pin, int threshold);
     int update();
     double updatePercent();
-    void setTreshold(int treshold);
   private:
     int _pin;
     int _threshold;

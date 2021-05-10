@@ -1,9 +1,9 @@
 #include "temt.h"
 
-Temt::Temt(int pin) {
+Temt::Temt(int pin, int threshold) {
   pinMode(pin, INPUT);
   _pin = pin;
-  _threshold = 650; // defaults to 650
+  _threshold = threshold;
 }
 
 int Temt::update() {
@@ -12,8 +12,4 @@ int Temt::update() {
 
 double Temt::updatePercent() {
   return double(analogRead(_pin))/_threshold;
-}
-
-void Temt::setTreshold(int treshold) {
-  _threshold = treshold;
 }
