@@ -6,10 +6,10 @@ Temt::Temt(int pin, int threshold) {
   _threshold = threshold;
 }
 
-int Temt::update() {
+int Temt::getVal() {
   return analogRead(_pin);
 }
 
-double Temt::updatePercent() {
+double Temt::getPercent() {
   return double(analogRead(_pin))/_threshold;
 }
