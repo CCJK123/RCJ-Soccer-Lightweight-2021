@@ -25,9 +25,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.print(" ");
   float angleDeg = ball.getDeg();
-  Serial.print(angleDeg);
   if (angleDeg >= 0 && angleDeg < 180) {
     // IR Ball is to the right of bot
     base.move(0.2, 1.1 * angleDeg, 0);
