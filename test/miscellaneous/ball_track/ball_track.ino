@@ -17,6 +17,7 @@ IR irBack(1);
 Ball ball(irFront, irBack);
 //Orientation imu();
 
+float angleDeg, irFrontHigh, irBackHigh, moveAngle;
 
 void setup() {
   base.rotate(0.2);
@@ -25,12 +26,18 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  float angleDeg = ball.getDeg();
-  if (angleDeg >= 0 && angleDeg < 180) {
-    // IR Ball is to the right of bot
-    base.move(0.2, 1.1 * angleDeg, 0);
+  irFrontHigh = irFront.maxVal();
+  irBackHigh = irBack.maxVal();
+  angleDeg = ball.getDeg();
+  
+  if (irFrontHigh > irBackHigh) {
+    // IR Ball is to the front of the bot
+    if (angleDeg >= 180) moveAngle = 2 * (angleDeg - 360);
+    else moveAngle = 2 * angleDeg;
   } else {
-    // IR Ball is to the left of bot
-    base.move(0.2, 0.9 * angleDeg, 0);
+    // IR Ball is to the back of the bot
+    if (angleDeg <= 180) moveAngle = angleDeg + 90;
+    else moveAngle = angleDeg - 90;
   }
+  base.move(0.2, moveAngle, 0);
 }
