@@ -21,7 +21,7 @@ float angleDeg, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier,
 
 #define IR_FRONT_THRESH 130
 #define IR_BACK_THRESH 120 
-#define IR_RESPONSE 1.00 // 
+#define IR_RESPONSE 0.8 // 
 
 void setup() {
   Serial.begin(9600);
@@ -67,7 +67,7 @@ void loop() {
     } else { // ball is behind the bot
 
       dist = pow((backHigh / IR_BACK_THRESH), IR_RESPONSE); // further the distance, smaller the number
-      backMultiplier = constrain((dist), 0, 1); // 2x for scaling, 1 - dist due to relationship  
+      backMultiplier = constrain((dist * 2), 0, 2); // 2x for scaling, 1 - dist due to relationship  
 
       if (angleDeg >= 180) {    // 3. ball is to the back left of the bot
         moveAngle = angleDeg - (90 * backMultiplier); 
@@ -77,5 +77,5 @@ void loop() {
     }
   }
 
-  base.move(0.15, moveAngle, 0);
+  base.move(0.2, moveAngle, 0);
 }
