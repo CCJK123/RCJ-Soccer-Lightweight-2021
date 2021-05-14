@@ -33,12 +33,12 @@ void loop() {
   angleDeg = ball.getDeg();
 
   if (angleDeg >= 350 || angleDeg <= 10) { // account for minor differences when ball in ball capture zone, need to be calibrated
-    frontMultiplier = constrain((IR_FRONT_TRESH - frontHigh) / 90, 0, 2);
+    frontMultiplier = constrain((IR_FRONT_THRESH - frontHigh) / 90, 0, 2);
   } else {
-    frontMultiplier = 2;
+    frontMultiplier = 4;
   }
 
-  backMultiplier = min(backHigh / IR_BACK_TRESH, 1);
+  backMultiplier = min(backHigh / IR_BACK_THRESH, 1);
 
   if (frontHigh > backHigh) { // ball is in front of the bot
     if (angleDeg >= 180) { // ball is to the left of the bot
