@@ -19,6 +19,9 @@ Ball ball(irFront, irBack);
 
 float angleDeg, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier;
 
+#define IR_FRONT_THRESH 130
+#define IR_BACK_THRESH 120 
+
 void setup() {
   Serial.begin(9600);
 }
@@ -29,28 +32,28 @@ void loop() {
   backHigh = irBack.maxVal();
   angleDeg = ball.getDeg();
 
-  if (angleDeg >= 345 || angleDeg <= 15) frontMultiplier = constrain((135 - frontHigh) / 90, 0, 2);
-  else frontMultiplier = 2;
-  backMultiplier = min(backHigh / 130, 1);
-  
-  if (frontHigh > backHigh) {
-    // IR Ball is to the front of the bot
-    if (angleDeg >= 180) {
-      // IR Ball is to the left of the bot
-      moveAngle = frontMultiplier * (angleDeg - 360);
-    } else {
-      // IR Ball is to the right of the bot
-      moveAngle = frontMultiplier * angleDeg;
-    }
+  if (angleDeg >= 350 || angleDeg <= 10) { // account for minor differences when ball in ball capture zone, need to be calibrated
+    frontMultiplier = constrain((IR_FRONT_TRESH - frontHigh) / 90, 0, 2);
   } else {
-    // IR Ball is to the back of the bot
-    if (angleDeg >= 180) {
-      // IR Ball is to the left of the bot
-      moveAngle = angleDeg - 90 * backMultiplier;
-    } else {
-      // IR Ball is to the right of the bot
-      moveAngle = angleDeg + 90 * backMultiplier;
+    frontMultiplier = 2;
+  }
+
+  backMultiplier = min(backHigh / IR_BACK_TRESH, 1);
+
+  if (frontHigh > backHigh) { // ball is in front of the bot
+    if (angleDeg >= 180) { // ball is to the left of the bot
+      moveAngle = (angleDeg - 360) * frontMultiplier;
+    } else { // ball is to the right of the bot
+      moveAngle = angleDeg * frontMultiplier;
+    }
+
+  } else { // ball is behind the bot
+    if (angleDeg >= 180) { // ball is to the left of the bot
+      moveAngle = angleDeg - (90 * backMultiplier);
+    } else { // ball is to the right of the bot
+      moveAngle = angleDeg + (90 * backMultiplier);
     }
   }
-  base.move(0.2, moveAngle, 0);
+
+  base.move(0.15, moveAngle, 0);
 }
