@@ -17,27 +17,40 @@ IR irBack(1);
 Ball ball(irFront, irBack);
 //Orientation imu();
 
-float angleDeg, irFrontHigh, irBackHigh, moveAngle;
+float angleDeg, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier;
 
 void setup() {
-  base.rotate(0.2);
-  delay(1000);
+  Serial.begin(9600);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  irFrontHigh = irFront.maxVal();
-  irBackHigh = irBack.maxVal();
+  frontHigh = irFront.maxVal();
+  backHigh = irBack.maxVal();
   angleDeg = ball.getDeg();
+
+  if (angleDeg >= 345 || angleDeg <= 15) frontMultiplier = constrain((135 - frontHigh) / 90, 0, 2);
+  else frontMultiplier = 2;
+  backMultiplier = min(backHigh / 130, 1);
   
-  if (irFrontHigh > irBackHigh) {
+  if (frontHigh > backHigh) {
     // IR Ball is to the front of the bot
-    if (angleDeg >= 180) moveAngle = 2 * (angleDeg - 360);
-    else moveAngle = 2 * angleDeg;
+    if (angleDeg >= 180) {
+      // IR Ball is to the left of the bot
+      moveAngle = frontMultiplier * (angleDeg - 360);
+    } else {
+      // IR Ball is to the right of the bot
+      moveAngle = frontMultiplier * angleDeg;
+    }
   } else {
     // IR Ball is to the back of the bot
-    if (angleDeg <= 180) moveAngle = angleDeg + 90;
-    else moveAngle = angleDeg - 90;
+    if (angleDeg >= 180) {
+      // IR Ball is to the left of the bot
+      moveAngle = angleDeg - 90 * backMultiplier;
+    } else {
+      // IR Ball is to the right of the bot
+      moveAngle = angleDeg + 90 * backMultiplier;
+    }
   }
   base.move(0.2, moveAngle, 0);
 }
