@@ -18,26 +18,34 @@ float Ball::getDeg() {
         maxVal = _irFront.maxVal();
         maxChannel = _irFront.maxChannel();
 
-        diff = 15.0; // half of the difference between each pair of channels (30 deg)
-    
         if (maxChannel != 7) {
             leftHigh = _irFront.one(maxChannel + 1); // checks the channel to the left (+1 because it is mounted upside down)
         } else { // maxChannel is left most channel
             leftHigh = _irBack.one(1); // channel to the left is the right most channel of the back ir
-            diff = 0.0; // no difference between the left most channel and the right most channel of the back ir
         }
         if (maxChannel != 1) {
             rightHigh = _irFront.one(maxChannel - 1); // checks the channel to the right (-1 because it is mounted upside down)
         } else { // maxChannel is right most channel
             rightHigh = _irBack.one(7); // channel to the right is the left most channel of the back ir
-            diff = 0.0; // no difference between the right most channel and the left most channel of the back ir
         }
     
         diffLeft = maxVal - leftHigh; diffRight = maxVal - rightHigh; // get the difference between the maximum reading and the reading of the channels adjacent to it
     
         if (leftHigh > rightHigh) { // ball is to the left
+            if (maxChannel == 7) {
+              diff = 0.0; // no difference between the left most channel and the right most channel of the back ir
+            } else {
+              diff = 15.0; // half of the difference between each pair of channels (30 deg)
+            }
+
             angle = frontDeg[maxChannel] - diff * (1 - diffLeft / diffRight);
         } else { // ball is to the right
+            if (maxChannel == 1) {
+              diff = 0.0; // no difference between the left most channel and the right most channel of the back ir
+            } else {
+              diff = 15.0; // half of the difference between each pair of channels (30 deg)
+            }
+
             angle = frontDeg[maxChannel] + diff * (1 - diffRight / diffLeft);
         }
 
@@ -47,26 +55,34 @@ float Ball::getDeg() {
         maxVal = _irBack.maxVal();
         maxChannel = _irBack.maxChannel();
 
-        diff = 15.0; // half of the difference between each pair of channels (30 deg)
-    
         if (maxChannel != 7) {
             leftHigh = _irBack.one(maxChannel + 1); // checks the channel to the left (+1 because it is mounted upside down)
         } else { // maxChannel is left most channel
             leftHigh = _irFront.one(1); // channel to the left is the right most channel of the front ir
-            diff = 0.0; // no difference between the left most channel and the right most channel of the front ir
         }
         if (maxChannel != 1) {
             rightHigh = _irBack.one(maxChannel - 1); // checks the channel to the right (-1 because it is mounted upside down)
         } else { // maxChannel is right most channel
             rightHigh = _irFront.one(7); // channel to the right is the left most channel of the front ir
-            diff = 0.0; // no difference between the right most channel and the left most channel of the front ir
         }
     
         diffLeft = maxVal - leftHigh; diffRight = maxVal - rightHigh; // get the difference between the maximum reading and the reading of the channels adjacent to it
     
         if (leftHigh > rightHigh) { // ball is to the left
+            if (maxChannel == 7) {
+              diff = 0.0; // no difference between the left most channel and the right most channel of the back ir
+            } else {
+              diff = 15.0; // half of the difference between each pair of channels (30 deg)
+            }
+
             angle = backDeg[maxChannel] - diff * (1 - diffLeft / diffRight);
         } else { // ball is to the right
+            if (maxChannel == 1) {
+              diff = 0.0; // no difference between the left most channel and the right most channel of the back ir
+            } else {
+              diff = 15.0; // half of the difference between each pair of channels (30 deg)
+            }
+
             angle = backDeg[maxChannel] + diff * (1 - diffRight / diffLeft);
         }
 
