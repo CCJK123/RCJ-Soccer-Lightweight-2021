@@ -6,8 +6,10 @@
 class Temt {
   public:
     Temt(int pin, int threshold);
-    int update();
-    double updatePercent();
+    int getVal();
+    double getPercent();
+    int getThreshold();
+    bool isOnLine();
   private:
     int _pin;
     int _threshold;

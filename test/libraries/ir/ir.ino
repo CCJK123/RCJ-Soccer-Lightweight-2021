@@ -20,3 +20,4 @@ void loop() {
   Serial.print(ir.maxChannel());
   Serial.print("\n");
   delay(100);
+}

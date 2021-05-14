@@ -1,11 +1,13 @@
-#include "ball.h"
+#include "ir.h"
 
-Ball::Ball(IR irFront, IR irBack) :
-    _irFront(irFront),
-    _irBack(irBack)
-{}
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+}
+IR _irFront(0);
+IR _irBack(1);
 
-float Ball::getDeg() {
+float getDeg() {
     int maxVal, maxChannel, leftHigh, rightHigh; // readings from sensor
     double diff, diffLeft, diffRight;
     double angle; // final output
@@ -17,12 +19,13 @@ float Ball::getDeg() {
         // get raw readings
         maxVal = _irFront.maxVal();
         maxChannel = _irFront.maxChannel();
-
+    
         if (maxChannel != 7) {
             leftHigh = _irFront.one(maxChannel + 1); // checks the channel to the left (+1 because it is mounted upside down)
         } else { // maxChannel is left most channel
             leftHigh = _irBack.one(1); // channel to the left is the right most channel of the back ir
         }
+
         if (maxChannel != 1) {
             rightHigh = _irFront.one(maxChannel - 1); // checks the channel to the right (-1 because it is mounted upside down)
         } else { // maxChannel is right most channel
@@ -33,19 +36,19 @@ float Ball::getDeg() {
     
         if (leftHigh > rightHigh) { // ball is to the left
             if (maxChannel == 7) {
-              diff = 0.0; // no difference between the left most channel and the right most channel of the back ir
+              diff = 0.0;
             } else {
-              diff = 15.0; // half of the difference between each pair of channels (30 deg)
+              diff = 15.0;
             }
-
+          
             angle = frontDeg[maxChannel] - diff * (1 - diffLeft / diffRight);
+            
         } else { // ball is to the right
             if (maxChannel == 1) {
-              diff = 0.0; // no difference between the left most channel and the right most channel of the back ir
+              diff = 0.0;
             } else {
-              diff = 15.0; // half of the difference between each pair of channels (30 deg)
+              diff = 15.0;
             }
-
             angle = frontDeg[maxChannel] + diff * (1 - diffRight / diffLeft);
         }
 
@@ -70,19 +73,17 @@ float Ball::getDeg() {
     
         if (leftHigh > rightHigh) { // ball is to the left
             if (maxChannel == 7) {
-              diff = 0.0; // no difference between the left most channel and the right most channel of the back ir
+              diff = 0.0;
             } else {
-              diff = 15.0; // half of the difference between each pair of channels (30 deg)
+              diff = 15.0;
             }
-
             angle = backDeg[maxChannel] - diff * (1 - diffLeft / diffRight);
         } else { // ball is to the right
             if (maxChannel == 1) {
-              diff = 0.0; // no difference between the left most channel and the right most channel of the back ir
+              diff = 0.0;
             } else {
-              diff = 15.0; // half of the difference between each pair of channels (30 deg)
+              diff = 15.0;
             }
-
             angle = backDeg[maxChannel] + diff * (1 - diffRight / diffLeft);
         }
 
@@ -91,4 +92,10 @@ float Ball::getDeg() {
     if (angle < 0) angle += 360; // corrects negative angles
 
     return angle;
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  Serial.println(getDeg());
+  delay(10);
 }
