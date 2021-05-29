@@ -21,8 +21,8 @@ void loop() {
   frontHigh = irFront.maxVal();
   backHigh = irBack.maxVal();
   if (max(frontHigh, backHigh) <= 130) {
-    base.move(0.2, ball.getDeg(), 0);
+    base.move(0.3, ball.getDeg(), 0);
   } else {
-    delay(600000);
+    delay(100000);
   }
 }
