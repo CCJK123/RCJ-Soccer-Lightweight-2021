@@ -6,5 +6,5 @@ Ultrasound::Ultrasound(int pin) {
 }
 
 int Ultrasound::getDist() {
-  return (double)analogRead(_pin)*1.325;
+  return (double)analogRead(_pin);
 }

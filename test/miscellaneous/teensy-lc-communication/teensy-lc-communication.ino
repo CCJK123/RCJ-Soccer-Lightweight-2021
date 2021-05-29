@@ -1,4 +1,7 @@
 #include "temt.h"
+#include "led.h"
+
+LED led(12);
 
 Temt temts[13] = {
   Temt(A0, 100), // front-facing for ball
@@ -26,7 +29,15 @@ void setup() {
 
 bool isOnLine() {
   for (int i = 1; i < 13; i++) {
-    if (temts[i].isOnLine()) return true;
+    if (i == 12) {
+      Serial.print(" ");
+      Serial.println(temts[i].getVal());
+      
+    } else {
+      Serial.print(" ");
+      Serial.print(temts[i].getVal());
+    }
+//    if (temts[i].isOnLine()) return true;
   }
   return false;
 }
@@ -36,6 +47,7 @@ bool ballDetected() {
 }
 
 void loop() {
+  led.on();
   // put your main code here, to run repeatedly:
   if (!ballDetected() && !isOnLine()) { // no ball detected AND not on line
     writeValue = 0;
