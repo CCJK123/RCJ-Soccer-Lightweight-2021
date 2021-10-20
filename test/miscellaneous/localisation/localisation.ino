@@ -21,19 +21,19 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-/*  // Raw Readings
+  // Raw Readings
   Serial.print("ultMidLeft= ");
   Serial.print(ultMidLeft.getDist());
   Serial.print(" ultMidRight= ");
-  Serial.print(ultMidRight.getDist() + 1000);
+  Serial.print(ultMidRight.getDist() + 500);
   Serial.print(" ultTopLeft= ");
-  Serial.print(ultTopLeft.getDist() + 2000);
+  Serial.print(ultTopLeft.getDist() + 1000);
   Serial.print(" ultTopFront= ");
-  Serial.print(ultTopFront.getDist() + 3000);
+  Serial.print(ultTopFront.getDist() + 1500);
   Serial.print(" ultTopRight = ");
-  Serial.print(ultTopRight.getDist() + 4000);
+  Serial.print(ultTopRight.getDist() + 2000);
   Serial.print(" ");
-*/
+
   // Confidence
   double length = min((ultMidLeft.getDist() + ultMidRight.getDist()) / 2 + ultTopFront.getDist() - 9, 243);
   double breadth = min(ultTopLeft.getDist() + ultTopRight.getDist() - 9, 182);
@@ -42,16 +42,16 @@ void loop() {
   else fieldArea *= 208;
   double confidence = 1 - length * breadth / fieldArea;
 
-  // Calculated Readings
+/*  // Calculated Readings
   Serial.print("length = ");
   Serial.print(length);
   Serial.print(" breadth = ");
   Serial.print(breadth);
-/*  Serial.print(" fieldArea = ");
-  Serial.print(fieldArea);*/
+  Serial.print(" fieldArea = ");
+  Serial.print(fieldArea);
   Serial.print(" confidence = ");
   Serial.print(confidence);
-  
+*/  
   Serial.println();
   delay(10);
 }
