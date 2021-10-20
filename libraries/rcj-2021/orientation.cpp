@@ -25,10 +25,23 @@ float Orientation::getYaw() {
   }
 }
 
+float Orientation::getMagZ() {
+  float magZ = (atan2(UM7::mag_x,UM7::mag_y) * 180) / 3.1415;
+  if (magZ < 0) {
+    return 360 + magZ;
+  } else {
+    return magZ;
+  }
+}
+
 void Orientation::zeroGyros() {
   UM7::zero_gyros();
 }
 
 void Orientation::calibrateAcc() {
   UM7::calibrate_accelerometers();
+}
+
+void Orientation::setMiscSettings() {
+  UM7::set_misc_ssettings(false, false, false, true);
 }
