@@ -9,8 +9,10 @@ class Orientation : public UM7 {
     Orientation(HardwareSerial &serial);
     bool decode();
     float getYaw();
+    float getMagZ();
     void zeroGyros();
     void calibrateAcc();
+    void setMiscSettings();
   private:
     HardwareSerial *_serialPort;
 };
