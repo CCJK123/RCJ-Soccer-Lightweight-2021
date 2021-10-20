@@ -7,6 +7,7 @@ void setup() {
   Serial.begin(115200);
   imu.zeroGyros();
   imu.calibrateAcc();
+  imu.setMiscSettings(); 
 }
 
 void loop() {
@@ -15,6 +16,8 @@ void loop() {
 
 void serialEvent1() {
   if (imu.decode()) {
+    Serial.print(imu.getMagZ());
+    Serial.print("    ");
     Serial.println(imu.getYaw());
   }
 }
