@@ -35,8 +35,8 @@ void loop() {
   Serial.print(" ");
 
   // Confidence
-  double length = min((ultMidLeft.getDist() + ultMidRight.getDist()) / 2 + ultTopFront.getDist() - 9, 243);
-  double breadth = min(ultTopLeft.getDist() + ultTopRight.getDist() - 9, 182);
+  double length = max(243 - ((ultMidLeft.getDist() + ultMidRight.getDist()) / 2 + ultTopFront.getDist() - 9), 0);
+  double breadth = max(182 - (ultTopLeft.getDist() + ultTopRight.getDist() - 9), 0);
   double fieldArea = 182;
   if (length > 208) fieldArea *= 243;
   else fieldArea *= 208;
