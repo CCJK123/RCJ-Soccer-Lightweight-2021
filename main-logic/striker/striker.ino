@@ -78,24 +78,24 @@ void loop() {
       }
     }
     angleDeg = atan2(coordCentre[1]-coordCorners[worstCorner][1], coordCentre[0]-coordCorners[worstCorner][0]);
-    if (worstCorner == 0) {
-      // Front Left Corner, Move Back Right
-      angleDeg += 90;
-    } else if (worstCorner == 1) {
-      // Front Right Corner
-      angleDeg = 270 - angleDeg;
-    } else if (worstCorner == 2) {
-      // Back Left Corner
-      angleDeg = 90 - angleDeg;
-    } else if (worstCorner == 3) {
-      // Back Right Corner
-      angleDeg += 270;
+    switch (worstCorner) {
+      case 0:
+        // Front Left Corner, Move Back Right
+        angleDeg += 90;
+      case 1:
+        // Front Right Corner, Move Back Left
+        angleDeg = 270 - angleDeg;
+      case 2:
+        // Back Left Corner, Move Front Right
+        angleDeg = 90 - angleDeg;
+      case 3:
+        // Back Right Corner, Move Front Left
+        angleDeg += 270;
     }
     base.move(BOT_MAX_SPEED, angleDeg, rotationRate);
     return;
   } else {
     // No - Bot is within bounds
-    ;
   }
 
   // Is the ball on the field?
@@ -140,14 +140,12 @@ void serialEvent5() {
 
 // Check if in slowdown zone
 double slowdownSpeed() {
-  // when dist 20, speed 0.25
-  // when dist 25, speed 0.50
-  // when dist 30, speed 0.75
-  // when dist 35, speed 1.00
   // speed = max_speed * (dist-20+const)/(slowdowndist+const)
-  // speed = BOT_MAX_SPEED * (dist - BOT_NO_GO_SIDE_DIST + BOT_SLOWDOWN_ADJUST) / (BOT_SLOWDOWN_DIST + BOT_SLOWDOWN_ADJUST)
   // const = 5 for min speed = 0.25
   return min(
     BOT_MAX_SPEED,
-    BOT_MAX_SPEED * (min(distLeft, distRight) - BOT_NO_GO_SIDE_DIST + BOT_SLOWDOWN_ADJUST) / (BOT_SLOWDOWN_DIST + BOT_SLOWDOWN_ADJUST));
+    BOT_MAX_SPEED
+    * (min(distLeft, distRight) - BOT_NO_GO_SIDE_DIST + BOT_SLOWDOWN_ADJUST) 
+    / (BOT_SLOWDOWN_DIST + BOT_SLOWDOWN_ADJUST)
+  );
 }
