@@ -51,10 +51,10 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   // Is the bot at risk of going out of bounds / in a place where there's no reason to be there?
-  distFront = coordCorners[0][1] = coordCorners[1][1] = ultTopFront.getDist();
-  distBack = coordCorners[2][1] = coordCorners[3][1] = (ultMidLeft.getDist() + ultMidRight.getDist()) / 2;
-  distLeft = coordCorners[0][0] = coordCorners[2][0] = ultTopLeft.getDist();
-  distRight = coordCorners[1][0] = coordCorners[3][0] = ultTopRight.getDist();
+  distFront = coordCorners[0][1] = coordCorners[1][1] = ultTopFront.getDist() - 4;
+  distBack = coordCorners[2][1] = coordCorners[3][1] = (ultMidLeft.getDist() + ultMidRight.getDist())/2 - 5;
+  distLeft = coordCorners[0][0] = coordCorners[2][0] = ultTopLeft.getDist() - 5;
+  distRight = coordCorners[1][0] = coordCorners[3][0] = ultTopRight.getDist() - 5;
   if (
     // Any side of bot too near to wall
     (distFront < BOT_NO_GO_SIDE_DIST)
@@ -96,6 +96,7 @@ void loop() {
     return;
   } else {
     // No - Bot is within bounds
+    ;
   }
 
   // Is the ball on the field?
