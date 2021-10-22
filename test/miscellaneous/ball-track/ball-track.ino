@@ -17,7 +17,7 @@ IR irBack(1);
 Ball ball(irFront, irBack);
 //Orientation imu();
 
-float angleDeg, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier, dist;
+float ballAngle, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier, dist;
 
 #define IR_FRONT_THRESH 130
 #define IR_BACK_THRESH 120 
@@ -31,11 +31,11 @@ void loop() {
   // put your main code here, to run repeatedly:
   frontHigh = irFront.maxVal();
   backHigh = irBack.maxVal();
-  angleDeg = ball.getDeg();
+  ballAngle = ball.getDeg();
 
 //  dist = pow((frontHigh / IR_FRONT_THRESH), IR_RESPONSE); // further the distance, smaller the number
 
-  if (angleDeg >= 350 || angleDeg <= 10) { // in ball cap zone // account for minor differences when ball in ball capture zone, need to be calibrated
+  if (ballAngle >= 350 || ballAngle <= 10) { // in ball cap zone // account for minor differences when ball in ball capture zone, need to be calibrated
     /*  0 <= multiplier <= 2, scaled by 2x from the dist
      *  multiplier < 1 when near for stability
      *  multiplier > 1 when far so as to prioritise one axis
@@ -43,10 +43,10 @@ void loop() {
     dist = pow((frontHigh / IR_FRONT_THRESH), IR_RESPONSE); // further the distance, smaller the number
     frontMultiplier = constrain((2 * (1 - dist)), 0, 2); // 2x for scaling, 1 - dist due to relationship
 
-    if (angleDeg >= 180) { // ball is to the left of the bot
-      moveAngle = (angleDeg - 360) * frontMultiplier; // negative to move left
+    if (ballAngle >= 180) { // ball is to the left of the bot
+      moveAngle = (ballAngle - 360) * frontMultiplier; // negative to move left
     } else {
-      moveAngle = angleDeg * frontMultiplier;
+      moveAngle = ballAngle * frontMultiplier;
     }
 
   } else { // in other zones
@@ -59,20 +59,20 @@ void loop() {
       dist = pow((frontHigh / IR_FRONT_THRESH), IR_RESPONSE); // further the distance, smaller the number
       frontMultiplier = constrain((dist + 1), 1, 2); // 2x for scaling, 1 - dist due to relationship
     
-      if (angleDeg >= 180) {    // 1. ball is to the front left of the bot
-        moveAngle = (angleDeg - 360) * frontMultiplier; // negative to move left
+      if (ballAngle >= 180) {    // 1. ball is to the front left of the bot
+        moveAngle = (ballAngle - 360) * frontMultiplier; // negative to move left
       } else {                  // 2. ball is to the front right of the bot
-        moveAngle = angleDeg * frontMultiplier;
+        moveAngle = ballAngle * frontMultiplier;
       }
     } else { // ball is behind the bot
 
       dist = pow((backHigh / IR_BACK_THRESH), IR_RESPONSE); // further the distance, smaller the number
       backMultiplier = constrain((dist * 2), 0, 2); // 2x for scaling, 1 - dist due to relationship  
 
-      if (angleDeg >= 180) {    // 3. ball is to the back left of the bot
-        moveAngle = angleDeg - (90 * backMultiplier); 
+      if (ballAngle >= 180) {    // 3. ball is to the back left of the bot
+        moveAngle = ballAngle - (90 * backMultiplier); 
       } else {                  // 4. ball is to the back right of the bot
-        moveAngle = angleDeg + (90 * backMultiplier);
+        moveAngle = ballAngle + (90 * backMultiplier);
       }
     }
   }
