@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include <UM7.h>
+#include "UM7.h"
 #include "orientation.h"
 
 Orientation::Orientation(HardwareSerial &serial) : UM7(serial) {
