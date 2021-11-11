@@ -2,16 +2,16 @@
 #include "base.h"
 #include "ultrasound.h"
 
-Motor motorFrontLeft(6, 7);
-Motor motorFrontRight(8, 9);
-Motor motorBackLeft(4, 5);
-Motor motorBackRight(2, 3);
+Motor motorFrontLeft(4, 5);   //6,7
+Motor motorFrontRight(7, 8);  //8,9
+Motor motorBackLeft(2, 3);    //4,5
+Motor motorBackRight(9, 10);  //2,3
 Base base(motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight);
-Ultrasound ultMidLeft(A9);
-Ultrasound ultMidRight(A20);
-Ultrasound ultTopLeft(A1);
-Ultrasound ultTopFront(A2);
-Ultrasound ultTopRight(A0);
+Ultrasound ultMidLeft(A18);   //A9
+Ultrasound ultMidRight(A14);  //A20
+Ultrasound ultTopLeft(A17);   //A1
+Ultrasound ultTopFront(A16);  //A2
+Ultrasound ultTopRight(A15);  //A0
 
 void setup() {
   // put your setup code here, to run once:

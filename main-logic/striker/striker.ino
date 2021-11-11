@@ -1,14 +1,14 @@
 #include <cmath>
 
 #include "motor.h"
-Motor motorFrontLeft(6, 7);
-Motor motorFrontRight(8, 9);
-Motor motorBackLeft(4, 5);
-Motor motorBackRight(2, 3);
+Motor motorFrontLeft(4, 5);   //6,7
+Motor motorFrontRight(7, 8);  //8,9
+Motor motorBackLeft(2, 3);    //4,5
+Motor motorBackRight(9, 10);  //2,3
 
 #include "base.h"
 Base base(motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight);
-double speed; float angleDeg; double rotationRate;
+double speed; float moveAngle; double rotationRate;
 
 #include "orientation.h"
 Orientation imu(Serial5);
@@ -16,17 +16,23 @@ float bearingInit = NULL;
 float bearingOffset;
 
 #include "ultrasound.h"
-Ultrasound ultMidLeft(A9);
-Ultrasound ultMidRight(A20);
-Ultrasound ultTopLeft(A1);
-Ultrasound ultTopFront(A2);
-Ultrasound ultTopRight(A0);
+Ultrasound ultMidLeft(A18);   //A9
+Ultrasound ultMidRight(A14);  //A20
+Ultrasound ultTopLeft(A17);   //A1
+Ultrasound ultTopFront(A16);  //A2
+Ultrasound ultTopRight(A15);  //A0
 int distFront, distBack, distLeft, distRight, coordCorners[4][2], worstCorner;
 double distCorner;
 int coordCentre[2] = {91, 121};
 
-#include "ball.h"
 #include "ir.h"
+IR irFront(0);
+IR irBack(1);
+
+#include "ball.h"
+Ball ball(irFront, irBack);
+float ballAngle, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier, dist;
+
 #include "led.h"
 #include "temt.h"
 
@@ -51,10 +57,16 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   // Is the bot at risk of going out of bounds / in a place where there's no reason to be there?
-  distFront = coordCorners[0][1] = coordCorners[1][1] = ultTopFront.getDist() - 4;
-  distBack = coordCorners[2][1] = coordCorners[3][1] = (ultMidLeft.getDist() + ultMidRight.getDist())/2 - 5;
-  distLeft = coordCorners[0][0] = coordCorners[2][0] = ultTopLeft.getDist() - 5;
-  distRight = coordCorners[1][0] = coordCorners[3][0] = ultTopRight.getDist() - 5;
+  //distFront = coordCorners[0][1] = coordCorners[1][1] = ultTopFront.getDist() - 4;
+  //distBack = coordCorners[2][1] = coordCorners[3][1] = (ultMidLeft.getDist() + ultMidRight.getDist())/2 - 5;
+  //distLeft = coordCorners[0][0] = coordCorners[2][0] = ultTopLeft.getDist() - 5;
+  //distRight = coordCorners[1][0] = coordCorners[3][0] = ultTopRight.getDist() - 5;
+  //For our bot ^
+  //For 2019 bot v
+  distFront = coordCorners[0][1] = coordCorners[1][1] = ultTopFront.getDist() - 3;
+  distBack = coordCorners[2][1] = coordCorners[3][1] = (ultMidLeft.getDist() + ultMidRight.getDist())/2 - 6;
+  distLeft = coordCorners[0][0] = coordCorners[2][0] = ultTopLeft.getDist() - 2;
+  distRight = coordCorners[1][0] = coordCorners[3][0] = ultTopRight.getDist() - 2;
   if (
     // Any side of bot too near to wall
     (distFront < BOT_NO_GO_SIDE_DIST)
@@ -77,22 +89,22 @@ void loop() {
         worstCorner = i;
       }
     }
-    angleDeg = atan2(coordCentre[1]-coordCorners[worstCorner][1], coordCentre[0]-coordCorners[worstCorner][0]);
+    moveAngle = atan2(coordCentre[1]-coordCorners[worstCorner][1], coordCentre[0]-coordCorners[worstCorner][0]);
     switch (worstCorner) {
       case 0:
         // Front Left Corner, Move Back Right
-        angleDeg += 90;
+        moveAngle += 90;
       case 1:
         // Front Right Corner, Move Back Left
-        angleDeg = 270 - angleDeg;
+        moveAngle = 270 - moveAngle;
       case 2:
         // Back Left Corner, Move Front Right
-        angleDeg = 90 - angleDeg;
+        moveAngle = 90 - moveAngle;
       case 3:
         // Back Right Corner, Move Front Left
-        angleDeg += 270;
+        moveAngle += 270;
     }
-    base.move(BOT_MAX_SPEED, angleDeg, rotationRate);
+    base.move(BOT_MAX_SPEED, moveAngle, rotationRate);
     return;
   } else {
     // No - Bot is within bounds
