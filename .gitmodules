@@ -4,3 +4,6 @@
 [submodule "libraries/UM7"]
 	path = libraries/UM7
 	url = https://github.com/PorridgePi/UM7
+[submodule "libraries/Adafruit_TCS34725"]
+	path = libraries/Adafruit_TCS34725
+	url = https://github.com/adafruit/Adafruit_TCS34725
