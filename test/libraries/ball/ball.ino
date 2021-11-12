@@ -1,4 +1,4 @@
-#include <ball.h>
+#include "ball.h"
 
 IR irFront(0); // uses Wire
 IR irBack(1); // uses Wire1
