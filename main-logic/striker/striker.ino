@@ -182,6 +182,24 @@ void loop() {
     } else {
       // No - Bot is in the goal
       // Move towards the ball
+      ballAngle = ball.getDeg();
+      moveAngle = 270;
+      if (ballAngle >= 180) {
+        moveAngle = 90;
+      }
+
+      if (ballAngle >= 350 || ballAngle <= 10) { // account for minor differences, need to be calibrated
+        speed = BOT_MAX_SPEED * 0.25;
+      } else {
+        speed = min(
+          BOT_MAX_SPEED,
+          BOT_MAX_SPEED
+          * (min(distLeft, distRight) - BOT_OUT_OF_GOAL_X_DIST + BOT_SLOWDOWN_ADJUST) 
+          / (BOT_OUT_OF_GOAL_X_DIST + BOT_SLOWDOWN_ADJUST)
+        );
+      }
+
+      base.move(speed, moveAngle, rotationRate);
     }
   }
 }
