@@ -1,5 +1,6 @@
 #include "orientation.h"
 
+//Orientation imu(Serial5); // Serial5 on the bot itself
 Orientation imu(Serial1);
 
 void setup() {
@@ -14,6 +15,7 @@ void loop() {
   // put your main code here, to run repeatedly:
 }
 
+//void serialEvent5() { // Serial5 on the bot itself
 void serialEvent1() {
   if (imu.decode()) {
     Serial.print(imu.getMagZ());
