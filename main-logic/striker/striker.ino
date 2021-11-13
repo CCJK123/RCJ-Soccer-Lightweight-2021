@@ -1,3 +1,7 @@
+// Bot States
+bool isBotStriker = true
+bool goalieStriker = false
+
 #include <cmath>
 
 #include "motor.h"
