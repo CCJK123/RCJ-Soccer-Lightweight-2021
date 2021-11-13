@@ -1,6 +1,6 @@
 // Bot States
 bool isBotStriker = true;
-bool goalieStriker = false;
+bool isBotGoalieStriker = false;
 
 #include <cmath>
 
@@ -52,10 +52,11 @@ float ballAngle, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier
 #define BOT_SLOWDOWN_ADJUST 5 // Higher adjust, higher min speed, has to be positive
 
 // Out of goal Zones
-#define BOT_GOAL_Y_WIDTH 30
+#define BOT_GOAL_Y_WIDTH 30 // Adjust this to restrict the bot closer to the goal
 #define BOT_OUT_OF_GOAL_X_DIST (25 + 31)
-#define BOT_OUT_OF_GOAL_Y_DIST (BOT_GOAL_Y_WIDTH + 25 + 25) // 25 + 25 (Goal - No-go)
-int coordGoalCentre[2] = {91, 121};
+#define BOT_OUT_OF_GOAL_Y_FRONT_DIST (171 - BOT_GOAL_Y_WIDTH) // 243 - (25 + 25 + BOT_GOAL_Y_WIDTH + 22 [BOT SIZE])
+#define BOT_OUT_OF_GOAL_Y_BACK_DIST (25 + 25 + BOT_GOAL_Y_WIDTH) // 25 + 25 (Goal - No-go) + Width
+int coordGoalCentre[2] = {91, 192 - BOT_GOAL_Y_WIDTH/2}; // x = 182/2, y = 243 - (25 + 25 + BOT_GOAL_Y_WIDTH/2)
 
 // Ball Track
 #define NO_BALL_THRESH 4
@@ -156,7 +157,7 @@ void loop() {
     if (!isBotStriker) {
       // Bot is Goalie
       // Act as striker
-      goalieStriker = true;
+      isBotGoalieStriker = true;
     }
 
     // Move towards opponent's goal
@@ -168,13 +169,16 @@ void loop() {
   // Is the bot outside the goal?
   // Check current location of bot, compare with location of goal
   // xc means x component
-  if (!isBotStriker) {
+  if (!isBotStriker || !isBotGoalieStriker) {
     if (
       (distLeft < BOT_OUT_OF_GOAL_X_DIST)
       || (distRight < BOT_OUT_OF_GOAL_X_DIST)
+      || (distBack > BOT_OUT_OF_GOAL_Y_BACK_DIST)
+      || (distFront < BOT_OUT_OF_GOAL_Y_FRONT_DIST)
     ) {
       // Yes - Bot is outside the goal
       // Move back to the goal
+      moveCornerToCoord(coordBot, coordGoalCentre);
     } else {
       // No - Bot is in the goal
       // Move towards the ball
