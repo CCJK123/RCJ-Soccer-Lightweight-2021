@@ -25,7 +25,7 @@ Ultrasound ultMidRight(A14);  //A20
 Ultrasound ultTopLeft(A17);   //A1
 Ultrasound ultTopFront(A16);  //A2
 Ultrasound ultTopRight(A15);  //A0
-int distFront, distBack, distLeft, distRight, coordCorners[4][2], worstCorner;
+int distFront, distBack, distLeft, distRight, coordCorners[4][2], worstCorner, coordBot[4][2];
 double distCorner;
 int coordCentre[2] = {91, 121};
 
@@ -90,6 +90,15 @@ void loop() {
   distLeft = coordCorners[0][0] = coordCorners[2][0] = ultTopLeft.getDist() - 2;
   distRight = coordCorners[1][0] = coordCorners[3][0] = ultTopRight.getDist() - 2;
   
+  // Coordinates of Bot
+  // Taking top left as (0,0), and bottom as own goal
+  // [0] [1]
+  // [2] [3]
+  coordBot[0][0] = coordBot[2][0] = distLeft;
+  coordBot[1][0] = coordBot[3][0] = 182 - distRight;
+  coordBot[0][1] = coordBot[1][1] = distFront;
+  coordBot[1][1] = coordBot[3][1] = 234 - distBack;
+
   if (
     // Any side of bot too near to wall
     (distFront < BOT_NO_GO_SIDE_DIST)
@@ -104,33 +113,7 @@ void loop() {
   ) {
     // Yes - Bot is on the line (TEMTs) or too near to wall (Ultrasound)
     // Move back into the field
-    worstCorner = 0;
-    distCorner = sqrt(pow(coordCorners[0][0], 2) + pow(coordCorners[0][1], 2));
-    
-    for (int i=1; i<4; i++) {
-      if (sqrt(pow(coordCorners[i][0], 2) + pow(coordCorners[i][1], 2)) < distCorner) {
-        distCorner = sqrt(pow(coordCorners[i][0], 2) + pow(coordCorners[i][1], 2));
-        worstCorner = i;
-      }
-    }
-    
-    moveAngle = atan2(coordCentre[1]-coordCorners[worstCorner][1], coordCentre[0]-coordCorners[worstCorner][0]);
-    switch (worstCorner) {
-      case 0:
-        // Front Left Corner, Move Back Right
-        moveAngle += 90;
-      case 1:
-        // Front Right Corner, Move Back Left
-        moveAngle = 270 - moveAngle;
-      case 2:
-        // Back Left Corner, Move Front Right
-        moveAngle = 90 - moveAngle;
-      case 3:
-        // Back Right Corner, Move Front Left
-        moveAngle += 270;
-    }
-    
-    base.move(slowdownSpeed(), moveAngle, rotationRate);
+    moveCornerToCoord(coordBot, coordCentre);
     return;
   
   } else {
@@ -230,7 +213,6 @@ void loop() {
   // Is the bot outside the goal?
   // Check current location of bot, compare with location of goal
   // xc means x component
-  // taking top left as (0,0), and bottom as own goal
   if (!isBotStriker) {
     if (
       (distLeft < BOT_OUT_OF_GOAL_X_DIST)
