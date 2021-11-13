@@ -39,12 +39,12 @@ float ballAngle, frontHigh, backHigh, frontMultiplier, backMultiplier, dist;
 
 
 // Compass Correction
-#define IMU_ROTATION_RATE_SCALE 0.005 
+#define IMU_ROTATION_RATE_SCALE 0.15
 
 // No-go / Slowdown Zones
 #define BOT_NO_GO_SIDE_DIST 20
 #define BOT_NO_GO_CORNER_DIST 50
-#define BOT_MAX_SPEED 0.1
+#define BOT_MAX_SPEED 0.3
 #define BOT_SLOWDOWN_DIST 15
 #define BOT_SLOWDOWN_ADJUST 5 // Higher adjust, higher min speed, has to be positive
 
