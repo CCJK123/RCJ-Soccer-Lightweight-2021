@@ -41,7 +41,6 @@ float ballAngle, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier
 #include "temt.h"
 
 
-
 // Compass Correction
 #define IMU_ROTATION_RATE_SCALE 0.005 
 
@@ -71,7 +70,6 @@ void setup() {
 }
 
 
-
 void loop() {
   // put your main code here, to run repeatedly:
 
@@ -83,13 +81,13 @@ void loop() {
   //distBack = coordCorners[2][1] = coordCorners[3][1] = (ultMidLeft.getDist() + ultMidRight.getDist())/2 - 5;
   //distLeft = coordCorners[0][0] = coordCorners[2][0] = ultTopLeft.getDist() - 5;
   //distRight = coordCorners[1][0] = coordCorners[3][0] = ultTopRight.getDist() - 5;
-  
+
   // 2019 bot
   distFront = coordCorners[0][1] = coordCorners[1][1] = ultTopFront.getDist() - 3;
   distBack = coordCorners[2][1] = coordCorners[3][1] = (ultMidLeft.getDist() + ultMidRight.getDist())/2 - 6;
   distLeft = coordCorners[0][0] = coordCorners[2][0] = ultTopLeft.getDist() - 2;
   distRight = coordCorners[1][0] = coordCorners[3][0] = ultTopRight.getDist() - 2;
-  
+
   // Coordinates of Bot
   // Taking top left as (0,0), and bottom as own goal
   // [0] [1]
@@ -115,7 +113,7 @@ void loop() {
     // Move back into the field
     moveCornerToCoord(coordBot, coordCentre);
     return;
-  
+
   } else {
     // No - Bot is within bounds
     ;
@@ -134,26 +132,27 @@ void loop() {
 
   } else {
     // Yes - Ball is on the field
+    // Pass
   }
+
 
   // Does the bot have the ball? Or is the ball stationary?
   if ((irFront.maxVal() <= 120) && ((irFront.maxChannel() < 3) || (irFront.maxChannel() > 5))) {
     // No - Ball far - High light intensity - TEMT reading above threshold (2021 bot)
     // No - Front IR reading below threshold (2019 bot) 
     if (isBotStriker) {
-      // Move towards ball - Ball track
-    
+      // Move towards ball - Ball track    
       ballTrack();  
       return;
+
     } else {
       // Act as Goalie
       // Pass
-      ;
     }
   } else {
     // Yes - Bot is in posession of the ball
-    // - Yes - TEMT reading below threshold (or IR reading higher than threshold) (2021 Bot)
-    // - Or Yes - Ball is stationary (do not implement yet)
+    // // Yes - TEMT reading below threshold (or IR reading higher than threshold) (2021 Bot)
+    // // Or Yes - Ball is stationary (do not implement yet)
     if (!isBotStriker) {
       // Bot is Goalie
       // Act as striker
@@ -208,7 +207,6 @@ void serialEvent1() {
 }
 
 
-
 // Check if in slowdown zone
 double slowdownSpeed() {
   // speed = max_speed * (dist-20+const)/(slowdowndist+const)
@@ -221,6 +219,8 @@ double slowdownSpeed() {
   );
 }
 
+
+// Move from worst corner of bounding box to a specific coordinate
 void moveCornerToCoord(int coordOrigin[4][2], int coordDest[2]) {
   int worstCorner, worstCornerDist, currentCornerDist;
   double moveAngle;
@@ -255,6 +255,8 @@ void moveCornerToCoord(int coordOrigin[4][2], int coordDest[2]) {
   base.move(slowdownSpeed(), moveAngle, rotationRate);
 }
 
+
+// Track and move towards the ball
 void ballTrack() {
   ballAngle = ball.getDeg();
 
