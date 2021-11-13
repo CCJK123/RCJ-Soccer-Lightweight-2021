@@ -11,7 +11,7 @@ Base base(motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight);
 double speed; float moveAngle; double rotationRate;
 
 #include "orientation.h"
-Orientation imu(Serial5);
+Orientation imu(Serial1);
 float bearingInit = NULL;
 float bearingOffset;
 
@@ -211,7 +211,12 @@ void loop() {
 
 
 // For whenever imu gives a reading
-void serialEvent5() {
+
+// 2021 bot
+//void serialEvent5() {
+
+// 2019 bot
+void serialEvent1() {
   if (imu.decode()) {
     if (bearingInit == NULL) {
       // Initialise bearing on startup
@@ -223,7 +228,7 @@ void serialEvent5() {
       if (bearingOffset > 180) bearingOffset -= 360;
       else if (bearingOffset < -180) bearingOffset += 360;
       // Adjust rotationRate accordingly
-      rotationRate = -bearingOffset * IMU_ROTATION_RATE_SCALE
+      rotationRate = -bearingOffset * IMU_ROTATION_RATE_SCALE;
     }
   }
 }
