@@ -283,22 +283,22 @@ double slowdownSpeed() {
   );
 }
 
-void moveCornerToCoord(int botCoord[4][2], int finalCoord[2]) {
+void moveCornerToCoord(int coordOrigin[4][2], int coordDest[2]) {
   int worstCorner, worstCornerDist, currentCornerDist;
   double moveAngle;
   worstCorner = 0;
   // removed sqrt from distance calculation as unnecessary
-  worstCornerDist = pow((finalCoord[0] - botCoord[0][0]), 2) + pow((finalCoord[0] - botCoord[0][1]), 2);
+  worstCornerDist = pow((coordOrigin[0] - coordDest[0][0]), 2) + pow((coordOrigin[0] - coordDest[0][1]), 2);
   
   for (int i=1; i<4; i++) {
-    currentCornerDist = pow((finalCoord[0] - botCoord[i][0]), 2) + pow((finalCoord[0] - botCoord[i][1]), 2);
+    currentCornerDist = pow((coordOrigin[0] - coordDest[i][0]), 2) + pow((coordOrigin[0] - coordDest[i][1]), 2);
     if (currentCornerDist < worstCornerDist) {
       worstCornerDist = currentCornerDist;
       worstCorner = i;
     }
   }
   
-  moveAngle = atan2(finalCoord[1]-botCoord[worstCorner][1], finalCoord[0]-botCoord[worstCorner][0]);
+  moveAngle = atan2(coordOrigin[1]-coordDest[worstCorner][1], coordOrigin[0]-coordDest[worstCorner][0]);
   switch (worstCorner) {
     case 0:
       // Front Left Corner, Move Back Right
