@@ -16,7 +16,7 @@ float bearingInit = NULL;
 float bearingOffset;
 
 #include "ultrasound.h"
-Ultrasound ultMidLeft(A18);   //A9
+Ultrasound ultMidLeft(A20);   //A9
 Ultrasound ultMidRight(A14);  //A20
 Ultrasound ultTopLeft(A17);   //A1
 Ultrasound ultTopFront(A16);  //A2
