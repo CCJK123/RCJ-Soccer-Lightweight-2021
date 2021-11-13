@@ -21,7 +21,7 @@ float ballAngle, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier
 
 #define IR_FRONT_THRESH 130
 #define IR_BACK_THRESH 120 
-#define IR_RESPONSE 0.8 // 
+#define IR_RESPONSE 0.8
 
 void setup() {
   Serial.begin(9600);
@@ -32,8 +32,6 @@ void loop() {
   frontHigh = irFront.maxVal();
   backHigh = irBack.maxVal();
   ballAngle = ball.getDeg();
-
-//  dist = pow((frontHigh / IR_FRONT_THRESH), IR_RESPONSE); // further the distance, smaller the number
 
   if (ballAngle >= 350 || ballAngle <= 10) { // in ball cap zone // account for minor differences when ball in ball capture zone, need to be calibrated
     /*  0 <= multiplier <= 2, scaled by 2x from the dist
