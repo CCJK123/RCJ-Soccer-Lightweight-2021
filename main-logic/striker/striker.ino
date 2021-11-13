@@ -31,10 +31,10 @@ IR irBack(1);
 
 #include "ball.h"
 Ball ball(irFront, irBack);
-float ballAngle, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier, dist;
+float ballAngle, frontHigh, backHigh, frontMultiplier, backMultiplier, dist;
 
-#include "led.h"
-#include "temt.h"
+//#include "led.h"
+//#include "temt.h"
 
 
 
@@ -44,7 +44,7 @@ float ballAngle, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier
 // No-go / Slowdown Zones
 #define BOT_NO_GO_SIDE_DIST 20
 #define BOT_NO_GO_CORNER_DIST 50
-#define BOT_MAX_SPEED 0.3
+#define BOT_MAX_SPEED 0.1
 #define BOT_SLOWDOWN_DIST 15
 #define BOT_SLOWDOWN_ADJUST 5 // Higher adjust, higher min speed, has to be positive
 
@@ -65,6 +65,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  //delay(1);
 
 
   // Is the bot at risk of going out of bounds / in a place where there's no reason to be there?
@@ -83,18 +84,21 @@ void loop() {
   
   if (
     // Any side of bot too near to wall
-    (distFront < BOT_NO_GO_SIDE_DIST)
-    || (distBack < BOT_NO_GO_SIDE_DIST)
-    || (distLeft < BOT_NO_GO_SIDE_DIST)
-    || (distRight < BOT_NO_GO_SIDE_DIST)
-    // Bot within corner exclusion zone
-    || ((distFront < BOT_NO_GO_CORNER_DIST) && (distLeft < BOT_NO_GO_CORNER_DIST))
-    || ((distFront < BOT_NO_GO_CORNER_DIST) && (distRight < BOT_NO_GO_CORNER_DIST))
-    || ((distBack < BOT_NO_GO_CORNER_DIST) && (distLeft < BOT_NO_GO_CORNER_DIST))
-    || ((distBack < BOT_NO_GO_CORNER_DIST) && (distRight < BOT_NO_GO_CORNER_DIST))
+//    (distFront < BOT_NO_GO_SIDE_DIST)
+//    || (distBack < BOT_NO_GO_SIDE_DIST)
+//    || (distLeft < BOT_NO_GO_SIDE_DIST)
+//    || (distRight < BOT_NO_GO_SIDE_DIST)
+//    // Bot within corner exclusion zone
+//    || ((distFront < BOT_NO_GO_CORNER_DIST) && (distLeft < BOT_NO_GO_CORNER_DIST))
+//    || ((distFront < BOT_NO_GO_CORNER_DIST) && (distRight < BOT_NO_GO_CORNER_DIST))
+//    || ((distBack < BOT_NO_GO_CORNER_DIST) && (distLeft < BOT_NO_GO_CORNER_DIST))
+//    || ((distBack < BOT_NO_GO_CORNER_DIST) && (distRight < BOT_NO_GO_CORNER_DIST))
+    false
   ) {
     // Yes - Bot is on the line (TEMTs) or too near to wall (Ultrasound)
     // Move back into the field
+    Serial.print("1. Preventing out of bounds -  Moving back into field");
+    
     worstCorner = 0;
     distCorner = sqrt(pow(coordCorners[0][0], 2) + pow(coordCorners[0][1], 2));
     
@@ -122,6 +126,13 @@ void loop() {
     }
     
     base.move(slowdownSpeed(), moveAngle, rotationRate);
+    Serial.print(" (");
+    Serial.print(slowdownSpeed());
+    Serial.print(") (");
+    Serial.print(moveAngle);
+    Serial.print(") (");
+    Serial.print(rotationRate);
+    Serial.println(")");
     return;
   
   } else {
@@ -138,6 +149,15 @@ void loop() {
   if ((frontHigh <= NO_BALL_THRESH) && (backHigh <= NO_BALL_THRESH)) {
     // No - IR reading above threshold
     // Move to neutral position
+    Serial.println("2. Ball not on field - Moving to neutral position");
+    base.move(0, 0, rotationRate);
+    Serial.print(" (");
+    Serial.print(0);
+    Serial.print(") (");
+    Serial.print(0);
+    Serial.print(") (");
+    Serial.print(rotationRate);
+    Serial.println(")");
     return;
 
   } else {
@@ -147,10 +167,12 @@ void loop() {
 
   // Does the bot have the ball?
 
-  if ((irFront.maxVal() <= 120) && ((irFront.maxChannel() < 3) || (irFront.maxChannel() > 5))) {
+  if ((irFront.maxVal() <= 120) && (irFront.maxChannel() != 4)) {
     // No - TEMT reading above threshold (2021 bot)
     // No - Front IR reading below threshold (2019 bot) 
     // Move towards ball
+
+    Serial.println("3. Bot does not have ball - Moving towards ball");
     
     ballAngle = ball.getDeg();
 
@@ -197,13 +219,29 @@ void loop() {
     }
 
     base.move(slowdownSpeed(), moveAngle, rotationRate);
+    Serial.print(" (");
+    Serial.print(slowdownSpeed());
+    Serial.print(") (");
+    Serial.print(moveAngle);
+    Serial.print(") (");
+    Serial.print(rotationRate);
+    Serial.println(")");
     return;
   
   } else {
     // Yes - Bot is in posession of the ball
     // Move towards opponent's goal
 
+    Serial.println("4. Bot has ball - Moving towards opponent's goal");
+    
     base.move(slowdownSpeed(), 0, rotationRate);
+    Serial.print(" (");
+    Serial.print(slowdownSpeed());
+    Serial.print(") (");
+    Serial.print(0);
+    Serial.print(") (");
+    Serial.print(rotationRate);
+    Serial.println(")");
     return;
   }
 }
@@ -220,10 +258,12 @@ void serialEvent1() {
   if (imu.decode()) {
     if (bearingInit == NULL) {
       // Initialise bearing on startup
+      Serial.println("5. Initial IMU setup");
       bearingInit = imu.getMagZ();
 
     } else {
       // Compare current bearing with initial bearing value
+      Serial.println("6. New IMU reading");
       bearingOffset = imu.getMagZ() - bearingInit;
       if (bearingOffset > 180) bearingOffset -= 360;
       else if (bearingOffset < -180) bearingOffset += 360;
@@ -239,10 +279,11 @@ void serialEvent1() {
 double slowdownSpeed() {
   // speed = max_speed * (dist-20+const)/(slowdowndist+const)
   // const = 5 for min speed = 0.25
-  return min(
-    BOT_MAX_SPEED,
-    BOT_MAX_SPEED
-    * (min(distLeft, distRight) - BOT_NO_GO_SIDE_DIST + BOT_SLOWDOWN_ADJUST) 
-    / (BOT_SLOWDOWN_DIST + BOT_SLOWDOWN_ADJUST)
-  );
+//  return min(
+//    BOT_MAX_SPEED,
+//    BOT_MAX_SPEED
+//    * (min(distLeft, distRight) - BOT_NO_GO_SIDE_DIST + BOT_SLOWDOWN_ADJUST) 
+//    / (BOT_SLOWDOWN_DIST + BOT_SLOWDOWN_ADJUST)
+//  );
+  return BOT_MAX_SPEED;
 }
