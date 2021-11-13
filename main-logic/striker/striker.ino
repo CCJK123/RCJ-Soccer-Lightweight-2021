@@ -113,7 +113,7 @@ void loop() {
 
   // Is the ball on the field?
   if () {
-    // No - IR reading above threshold
+    // No - Ball is far away/blocked when grabbed - IR reading below threshold
     // Move to neutral position
     return;
   } else {
@@ -122,12 +122,13 @@ void loop() {
 
   // Does the bot have the ball?
   if () {
-    // No - TEMT reading above threshold
-    // Move towards ball
-    return;    
-  } else {
-    // Yes - Bot is in posession of the ball
+    // Yes - Bot is in posession of the ball - TEMT reading below threshold
     // Move towards opponent's goal
+    return;
+  } else {
+    // No - Ball far - High light intensity - TEMT reading above threshold
+    // Move towards ball - Ball track
+  }
   }
 }
 
