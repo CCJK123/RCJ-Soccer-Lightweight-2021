@@ -282,3 +282,37 @@ double slowdownSpeed() {
     / (BOT_SLOWDOWN_DIST + BOT_SLOWDOWN_ADJUST)
   );
 }
+
+void moveCornerToCoord(int botCoord[4][2], int finalCoord[2]) {
+  int worstCorner, worstCornerDist, currentCornerDist;
+  double moveAngle;
+  worstCorner = 0;
+  // removed sqrt from distance calculation as unnecessary
+  worstCornerDist = pow((finalCoord[0] - botCoord[0][0]), 2) + pow((finalCoord[0] - botCoord[0][1]), 2);
+  
+  for (int i=1; i<4; i++) {
+    currentCornerDist = pow((finalCoord[0] - botCoord[i][0]), 2) + pow((finalCoord[0] - botCoord[i][1]), 2);
+    if (currentCornerDist < worstCornerDist) {
+      worstCornerDist = currentCornerDist;
+      worstCorner = i;
+    }
+  }
+  
+  moveAngle = atan2(finalCoord[1]-botCoord[worstCorner][1], finalCoord[0]-botCoord[worstCorner][0]);
+  switch (worstCorner) {
+    case 0:
+      // Front Left Corner, Move Back Right
+      moveAngle += 90;
+    case 1:
+      // Front Right Corner, Move Back Left
+      moveAngle = 270 - moveAngle;
+    case 2:
+      // Back Left Corner, Move Front Right
+      moveAngle = 90 - moveAngle;
+    case 3:
+      // Back Right Corner, Move Front Left
+      moveAngle += 270;
+  }
+  
+  base.move(slowdownSpeed(), moveAngle, rotationRate);
+}
