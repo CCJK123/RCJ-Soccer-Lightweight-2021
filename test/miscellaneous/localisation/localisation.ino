@@ -7,7 +7,7 @@ Motor motorFrontRight(7, 8);  //8,9
 Motor motorBackLeft(2, 3);    //4,5
 Motor motorBackRight(9, 10);  //2,3
 Base base(motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight);
-Ultrasound ultMidLeft(A18);   //A9
+Ultrasound ultMidLeft(A20);   //A9
 Ultrasound ultMidRight(A14);  //A20
 Ultrasound ultTopLeft(A17);   //A1
 Ultrasound ultTopFront(A16);  //A2
