@@ -7,10 +7,10 @@
 #include "orientation.h"
 */
 
-Motor motorFrontLeft(6, 7);
-Motor motorFrontRight(8, 9);
-Motor motorBackLeft(4, 5);
-Motor motorBackRight(2, 3);
+Motor motorFrontLeft(4, 5);   //6,7
+Motor motorFrontRight(7, 8);  //8,9
+Motor motorBackLeft(2, 3);    //4,5
+Motor motorBackRight(9, 10);  //2,3
 Base base(motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight);
 IR irFront(0);
 IR irBack(1);
