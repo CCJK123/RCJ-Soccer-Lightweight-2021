@@ -225,7 +225,6 @@ void loop() {
     base.move(slowdownSpeed(), 0, rotationRate);
     return;
   }
-}
 
   // Goalie
   // Is the bot outside the goal?
