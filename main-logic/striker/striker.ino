@@ -1,6 +1,6 @@
 // Bot States
-bool isBotStriker = true
-bool goalieStriker = false
+bool isBotStriker = true;
+bool goalieStriker = false;
 
 #include <cmath>
 
@@ -185,7 +185,7 @@ void serialEvent5() {
       if (bearingOffset > 180) bearingOffset -= 360;
       else if (bearingOffset < -180) bearingOffset += 360;
       // Adjust rotationRate accordingly
-      rotationRate = -bearingOffset * IMU_ROTATION_RATE_SCALE
+      rotationRate = -bearingOffset * IMU_ROTATION_RATE_SCALE;
     }
   }
 }
