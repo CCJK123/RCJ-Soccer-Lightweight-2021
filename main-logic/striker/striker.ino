@@ -84,20 +84,19 @@ void loop() {
   
   if (
     // Any side of bot too near to wall
-//    (distFront < BOT_NO_GO_SIDE_DIST)
-//    || (distBack < BOT_NO_GO_SIDE_DIST)
-//    || (distLeft < BOT_NO_GO_SIDE_DIST)
-//    || (distRight < BOT_NO_GO_SIDE_DIST)
-//    // Bot within corner exclusion zone
-//    || ((distFront < BOT_NO_GO_CORNER_DIST) && (distLeft < BOT_NO_GO_CORNER_DIST))
-//    || ((distFront < BOT_NO_GO_CORNER_DIST) && (distRight < BOT_NO_GO_CORNER_DIST))
-//    || ((distBack < BOT_NO_GO_CORNER_DIST) && (distLeft < BOT_NO_GO_CORNER_DIST))
-//    || ((distBack < BOT_NO_GO_CORNER_DIST) && (distRight < BOT_NO_GO_CORNER_DIST))
-    false
+    (distFront < BOT_NO_GO_SIDE_DIST)
+    || (distBack < BOT_NO_GO_SIDE_DIST)
+    || (distLeft < BOT_NO_GO_SIDE_DIST)
+    || (distRight < BOT_NO_GO_SIDE_DIST)
+    // Bot within corner exclusion zone
+    || ((distFront < BOT_NO_GO_CORNER_DIST) && (distLeft < BOT_NO_GO_CORNER_DIST))
+    || ((distFront < BOT_NO_GO_CORNER_DIST) && (distRight < BOT_NO_GO_CORNER_DIST))
+    || ((distBack < BOT_NO_GO_CORNER_DIST) && (distLeft < BOT_NO_GO_CORNER_DIST))
+    || ((distBack < BOT_NO_GO_CORNER_DIST) && (distRight < BOT_NO_GO_CORNER_DIST))
   ) {
     // Yes - Bot is on the line (TEMTs) or too near to wall (Ultrasound)
     // Move back into the field
-    Serial.print("1. Preventing out of bounds -  Moving back into field");
+    Serial.println("1. Preventing out of bounds -  Moving back into field");
     
     worstCorner = 0;
     distCorner = sqrt(pow(coordCorners[0][0], 2) + pow(coordCorners[0][1], 2));
@@ -279,11 +278,10 @@ void serialEvent1() {
 double slowdownSpeed() {
   // speed = max_speed * (dist-20+const)/(slowdowndist+const)
   // const = 5 for min speed = 0.25
-//  return min(
-//    BOT_MAX_SPEED,
-//    BOT_MAX_SPEED
-//    * (min(distLeft, distRight) - BOT_NO_GO_SIDE_DIST + BOT_SLOWDOWN_ADJUST) 
-//    / (BOT_SLOWDOWN_DIST + BOT_SLOWDOWN_ADJUST)
-//  );
-  return BOT_MAX_SPEED;
+  return min(
+    BOT_MAX_SPEED,
+    BOT_MAX_SPEED
+    * (min(distLeft, distRight) - BOT_NO_GO_SIDE_DIST + BOT_SLOWDOWN_ADJUST) 
+    / (BOT_SLOWDOWN_DIST + BOT_SLOWDOWN_ADJUST)
+  );
 }

@@ -13,6 +13,16 @@ Ultrasound ultTopLeft(A17);   //A1
 Ultrasound ultTopFront(A16);  //A2
 Ultrasound ultTopRight(A15);  //A0
 
+#include "orientation.h"
+Orientation imu(Serial1);
+float bearingInit = NULL;
+float bearingOffset;
+double rotationRate;
+
+// Compass Correction
+#define IMU_ROTATION_RATE_SCALE 0.15
+
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -52,21 +62,45 @@ void loop() {
     // Forward
     if (ultTopLeft.getDist() > ultTopRight.getDist()) {
       // Left
-      base.move(0.2, 315, 0);
+      base.move(0.2, 315, rotationRate);
     } else {
       // Right
-      base.move(0.2, 45, 0);
+      base.move(0.2, 45, rotationRate);
     }
   } else {
     // Backward
     if (ultTopLeft.getDist() > ultTopRight.getDist()) {
       // Left
-      base.move(0.2, 225, 0);
+      base.move(0.2, 225, rotationRate);
     } else {
       // Right
-      base.move(0.2, 135, 0);
+      base.move(0.2, 135, rotationRate);
     }
   }
   
   delay(10);
+}
+
+
+// For whenever imu gives a reading
+void serialEvent1() {
+  if (imu.decode()) {
+    if (bearingInit == NULL) {
+      // Initialise bearing on startup
+      Serial.println("5. Initial IMU setup");
+      bearingInit = imu.getMagZ();
+
+    } else {
+      // Compare current bearing with initial bearing value
+      Serial.println("6. New IMU reading");
+      bearingOffset = imu.getMagZ() - bearingInit;
+      if (bearingOffset > 180) bearingOffset -= 360;
+      else if (bearingOffset < -180) bearingOffset += 360;
+      // Adjust rotationRate accordingly
+      rotationRate = -bearingOffset * IMU_ROTATION_RATE_SCALE;
+    }
+  }
+  Serial.print(imu.getMagZ());
+  Serial.print(" ");
+  Serial.println(rotationRate);
 }
