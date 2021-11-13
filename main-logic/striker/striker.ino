@@ -51,6 +51,12 @@ float ballAngle, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier
 #define BOT_SLOWDOWN_DIST 15
 #define BOT_SLOWDOWN_ADJUST 5 // Higher adjust, higher min speed, has to be positive
 
+// Out of goal Zones
+#define BOT_GOAL_Y_WIDTH 30
+#define BOT_OUT_OF_GOAL_X_DIST (25 + 31)
+#define BOT_OUT_OF_GOAL_Y_DIST (BOT_GOAL_Y_WIDTH + 25 + 25) // 25 + 25 (Goal - No-go)
+int coordGoalCentre[2] = {91, 121};
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -124,15 +130,44 @@ void loop() {
     // Yes - Ball is on the field
   }
 
-  // Does the bot have the ball?
+  // Does the bot have the ball? Or is the ball stationary?
   if () {
-    // Yes - Bot is in posession of the ball - TEMT reading below threshold
+    // Yes - Bot is in posession of the ball - TEMT reading below threshold (or IR reading higher than threshold)
+    // Or Yes - Ball is stationary (do not implement yet)
+    if (!isBotStriker) {
+      // Bot is Goalie
+      // Act as striker
+      goalieStriker = true;
+    }
     // Move towards opponent's goal
     return;
   } else {
     // No - Ball far - High light intensity - TEMT reading above threshold
-    // Move towards ball - Ball track
+    if (isBotStriker) {
+      // Move towards ball - Ball track
+    } else {
+      // Act as Goalie
+      // Pass
+      ;
+    }
   }
+
+  // Goalie
+  // Is the bot outside the goal?
+  // Check current location of bot, compare with location of goal
+  // xc means x component
+  // taking top left as (0,0), and bottom as own goal
+  if (!isBotStriker) {
+    if (
+      (distLeft < BOT_OUT_OF_GOAL_X_DIST)
+      || (distRight < BOT_OUT_OF_GOAL_X_DIST)
+    ) {
+      // Yes - Bot is outside the goal
+      // Move back to the goal
+    } else {
+      // No - Bot is in the goal
+      // Move towards the ball
+    }
   }
 }
 
