@@ -252,23 +252,52 @@ double slowdownSpeed() {
 
 
 // Move from worst corner of bounding box to a specific coordinate
-void moveToCoord(int coordOrigin[4][2], int coordDest[2]) {
-  int worstCorner, worstCornerDist, currentCornerDist;
+void moveToCoord(int coordOrigin[4][2], int coordDest[2], bool fromCorner = true) {
+  int quadrant;
   double moveAngle;
-  worstCorner = 0;
-  // removed sqrt from distance calculation as unnecessary
-  worstCornerDist = pow((coordDest[0] - coordOrigin[0][0]), 2) + pow((coordDest[0] - coordOrigin[0][1]), 2);
-  
-  for (int i=1; i<4; i++) {
-    currentCornerDist = pow((coordDest[0] - coordOrigin[i][0]), 2) + pow((coordDest[0] - coordOrigin[i][1]), 2);
-    if (currentCornerDist < worstCornerDist) {
-      worstCornerDist = currentCornerDist;
-      worstCorner = i;
+
+  if (fromCorner) {
+    int worstCorner, worstCornerDist, currentCornerDist;
+    worstCorner = 0;
+    // removed sqrt from distance calculation as unnecessary
+    worstCornerDist = pow((coordDest[0] - coordOrigin[0][0]), 2) + pow((coordDest[0] - coordOrigin[0][1]), 2);
+    
+    for (int i=1; i<4; i++) {
+      currentCornerDist = pow((coordDest[0] - coordOrigin[i][0]), 2) + pow((coordDest[0] - coordOrigin[i][1]), 2);
+      if (currentCornerDist < worstCornerDist) {
+        worstCornerDist = currentCornerDist;
+        worstCorner = i;
+      }
     }
+    quadrant = worstCorner;
+    moveAngle = atan2(coordDest[1]-coordOrigin[worstCorner][1], coordDest[0]-coordOrigin[worstCorner][0]);
+  } else {
+    // Get centre of bounding box
+    int coordOriginCentre[2];
+    // Mid-point formula: (x, y) = ((x1+x2)/2, (y1+y2)/2)
+    coordOriginCentre[0] = (coordOrigin[0][0] + coordOrigin[3][0])/2;
+    coordOriginCentre[1] = (coordOrigin[0][1] + coordOrigin[3][1])/2;
+
+    // Get quadrant: Origin - Destination
+    // [-][+] [+][+]
+    // [-][-] [+][-]
+    int xDiff, yDiff;
+    xDiff = coordOriginCentre[0] - coordDest[0];
+    yDiff = coordOriginCentre[1] - coordDest[1];
+
+    // Ignoring xDiff = 0, yDiff = 0 as it is unlikely to be that accurate
+    quadrant = 0;
+    if (xDiff > 0) {
+      quadrant += 1;
+    }
+    if (yDiff < 0 ) {
+      quadrant += 2;
+    }
+
+    moveAngle = atan2(coordDest[1]-coordOriginCentre[1], coordDest[0]-coordOriginCentre[0]);
   }
-  
-  moveAngle = atan2(coordDest[1]-coordOrigin[worstCorner][1], coordDest[0]-coordOrigin[worstCorner][0]);
-  switch (worstCorner) {
+
+  switch (quadrant) {
     case 0:
       // Front Left Corner, Move Back Right
       moveAngle += 90;
