@@ -112,7 +112,7 @@ void loop() {
   ) {
     // Yes - Bot is on the line (TEMTs) or too near to wall (Ultrasound)
     // Move back into the field
-    moveCornerToCoord(coordBot, coordCentre);
+    moveToCoord(coordBot, coordCentre);
     return;
 
   } else {
@@ -129,7 +129,7 @@ void loop() {
   if ((frontHigh <= NO_BALL_THRESH) && (backHigh <= NO_BALL_THRESH)) {
     // No - Ball is far away/blocked when grabbed - IR reading below threshold
     // Move to neutral position
-    moveCornerToCoord(coordBot, coordCentre);
+    moveToCoord(coordBot, coordCentre);
     return;
 
   } else {
@@ -170,7 +170,7 @@ void loop() {
     //   base.move(slowdownSpeed(), 45, rotationRate);
     // }
 
-    
+
     return;
   }
 
@@ -187,7 +187,7 @@ void loop() {
     ) {
       // Yes - Bot is outside the goal
       // Move back to the goal
-      moveCornerToCoord(coordBot, coordGoalCentre);
+      moveToCoord(coordBot, coordGoalCentre);
     } else {
       // No - Bot is in the goal
       // Move towards the ball
@@ -252,7 +252,7 @@ double slowdownSpeed() {
 
 
 // Move from worst corner of bounding box to a specific coordinate
-void moveCornerToCoord(int coordOrigin[4][2], int coordDest[2]) {
+void moveToCoord(int coordOrigin[4][2], int coordDest[2]) {
   int worstCorner, worstCornerDist, currentCornerDist;
   double moveAngle;
   worstCorner = 0;
