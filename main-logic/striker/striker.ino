@@ -36,14 +36,14 @@ IR irBack(1);
 
 #include "ball.h"
 Ball ball(irFront, irBack);
-float ballAngle, frontHigh, backHigh, moveAngle, frontMultiplier, backMultiplier, dist;
+float ballAngle, frontHigh, backHigh, frontMultiplier, backMultiplier, dist;
 
-#include "led.h"
-#include "temt.h"
+//#include "led.h"
+//#include "temt.h"
 
 
 // Compass Correction
-#define IMU_ROTATION_RATE_SCALE 0.005 
+#define IMU_ROTATION_RATE_SCALE 0.15
 
 // No-go / Slowdown Zones
 #define BOT_NO_GO_SIDE_DIST 20
@@ -74,6 +74,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  //delay(1);
 
 
   // Is the bot at risk of going out of bounds / in a place where there's no reason to be there?
@@ -113,7 +114,17 @@ void loop() {
   ) {
     // Yes - Bot is on the line (TEMTs) or too near to wall (Ultrasound)
     // Move back into the field
+    Serial.println("1. Preventing out of bounds -  Moving back into field");
+
     moveToCoord(coordBot, coordCentre);
+
+    Serial.print(" (");
+    Serial.print(slowdownSpeed());
+    Serial.print(") (");
+    Serial.print(moveAngle);
+    Serial.print(") (");
+    Serial.print(rotationRate);
+    Serial.println(")");
     return;
 
   } else {
@@ -130,7 +141,17 @@ void loop() {
   if ((frontHigh <= NO_BALL_THRESH) && (backHigh <= NO_BALL_THRESH)) {
     // No - Ball is far away/blocked when grabbed - IR reading below threshold
     // Move to neutral position
+    Serial.println("2. Ball not on field - Moving to neutral position");
+
     moveToCoord(coordBot, coordCentre);
+
+    Serial.print(" (");
+    Serial.print(0);
+    Serial.print(") (");
+    Serial.print(0);
+    Serial.print(") (");
+    Serial.print(rotationRate);
+    Serial.println(")");
     return;
 
   } else {
@@ -140,12 +161,24 @@ void loop() {
 
 
   // Does the bot have the ball? Or is the ball stationary?
-  if ((irFront.maxVal() <= 120) && ((irFront.maxChannel() < 3) || (irFront.maxChannel() > 5))) {
+
+  if ((irFront.maxVal() <= 120) && (irFront.maxChannel() != 4)) {
     // No - Ball far - High light intensity - TEMT reading above threshold (2021 bot)
     // No - Front IR reading below threshold (2019 bot) 
     if (isBotStriker) {
       // Move towards ball - Ball track
+
+      Serial.println("3. Bot does not have ball - Moving towards ball");
+
       ballTrack();
+
+      Serial.print(" (");
+      Serial.print(slowdownSpeed());
+      Serial.print(") (");
+      Serial.print(moveAngle);
+      Serial.print(") (");
+      Serial.print(rotationRate);
+      Serial.println(")");
       return;
 
     } else {
@@ -172,7 +205,17 @@ void loop() {
     //   base.move(slowdownSpeed(), 45, rotationRate);
     // }
 
+    Serial.println("4. Bot has ball - Moving towards opponent's goal");
+    
     moveToCoord(coordBot, coordOppGoal);
+
+    Serial.print(" (");
+    Serial.print(slowdownSpeed());
+    Serial.print(") (");
+    Serial.print(0);
+    Serial.print(") (");
+    Serial.print(rotationRate);
+    Serial.println(")");
     return;
   }
 
@@ -226,10 +269,12 @@ void serialEvent1() {
   if (imu.decode()) {
     if (bearingInit == NULL) {
       // Initialise bearing on startup
+      Serial.println("5. Initial IMU setup");
       bearingInit = imu.getMagZ();
 
     } else {
       // Compare current bearing with initial bearing value
+      Serial.println("6. New IMU reading");
       bearingOffset = imu.getMagZ() - bearingInit;
       if (bearingOffset > 180) bearingOffset -= 360;
       else if (bearingOffset < -180) bearingOffset += 360;
