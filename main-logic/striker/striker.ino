@@ -28,6 +28,7 @@ Ultrasound ultTopRight(A15);  //A0
 int distFront, distBack, distLeft, distRight, coordCorners[4][2], worstCorner, coordBot[4][2];
 double distCorner;
 int coordCentre[2] = {91, 121};
+int coordOppGoal[2] = {91, 40}; // y = 25 + 25 - 10
 
 #include "ir.h"
 IR irFront(0);
@@ -162,6 +163,7 @@ void loop() {
     }
 
     // Move towards opponent's goal
+
     // if (distLeft > distRight) { // Centre left and right
     //   // Bot to the right, need to move to left
     //   base.move(slowdownSpeed(), 315, rotationRate);
@@ -170,7 +172,7 @@ void loop() {
     //   base.move(slowdownSpeed(), 45, rotationRate);
     // }
 
-
+    moveToCoord(coordBot, coordOppGoal);
     return;
   }
 
