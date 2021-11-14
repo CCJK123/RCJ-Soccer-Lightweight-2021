@@ -223,7 +223,7 @@ void loop() {
   // Is the bot outside the goal?
   // Check current location of bot, compare with location of goal
   // xc means x component
-  if (!isBotStriker || !isBotGoalieStriker) {
+  if (!isBotStriker && !isBotGoalieStriker) {
     if (
       (distLeft < BOT_OUT_OF_GOAL_X_DIST)
       || (distRight < BOT_OUT_OF_GOAL_X_DIST)
