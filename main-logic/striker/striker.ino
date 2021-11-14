@@ -129,6 +129,7 @@ void loop() {
   if ((frontHigh <= NO_BALL_THRESH) && (backHigh <= NO_BALL_THRESH)) {
     // No - Ball is far away/blocked when grabbed - IR reading below threshold
     // Move to neutral position
+    moveCornerToCoord(coordBot, coordCentre);
     return;
 
   } else {
@@ -142,8 +143,8 @@ void loop() {
     // No - Ball far - High light intensity - TEMT reading above threshold (2021 bot)
     // No - Front IR reading below threshold (2019 bot) 
     if (isBotStriker) {
-      // Move towards ball - Ball track    
-      ballTrack();  
+      // Move towards ball - Ball track
+      ballTrack();
       return;
 
     } else {
@@ -161,7 +162,15 @@ void loop() {
     }
 
     // Move towards opponent's goal
-    base.move(slowdownSpeed(), 0, rotationRate);
+    // if (distLeft > distRight) { // Centre left and right
+    //   // Bot to the right, need to move to left
+    //   base.move(slowdownSpeed(), 315, rotationRate);
+    // } else {
+    //   // Bot to the left, need to move to right
+    //   base.move(slowdownSpeed(), 45, rotationRate);
+    // }
+
+    
     return;
   }
 
