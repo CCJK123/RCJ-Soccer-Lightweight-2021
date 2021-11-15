@@ -36,7 +36,7 @@ IR irBack(1);
 
 #include "ball.h"
 Ball ball(irFront, irBack);
-float ballAngle, frontHigh, backHigh, frontMultiplier, backMultiplier, dist;
+float ballAngle, ballIntensity, frontHigh, backHigh, frontMultiplier, backMultiplier, dist;
 
 //#include "led.h"
 //#include "temt.h"
@@ -58,6 +58,13 @@ float ballAngle, frontHigh, backHigh, frontMultiplier, backMultiplier, dist;
 #define BOT_OUT_OF_GOAL_Y_FRONT_DIST (171 - BOT_GOAL_Y_WIDTH) // 243 - (25 + 25 + BOT_GOAL_Y_WIDTH + 22 [BOT SIZE])
 #define BOT_OUT_OF_GOAL_Y_BACK_DIST (25 + 25 + BOT_GOAL_Y_WIDTH) // 25 + 25 (Goal - No-go) + Width
 int coordGoalCentre[2] = {91, 192 - BOT_GOAL_Y_WIDTH/2}; // x = 182/2, y = 243 - (25 + 25 + BOT_GOAL_Y_WIDTH/2)
+
+// Goalie Striker Transition
+#define BALL_STATIONARY_IR_THRESH 8
+#define BALL_STATIONARY_ANGLE_THRESH 25
+#define BOT_TRANSITION_TIME 2000
+int ballPrevIntensity, ballPrevAngle = 0;
+unsigned long timeCurrent, timeBallNotStationary = 0;
 
 // Ball Track
 #define NO_BALL_THRESH 4
@@ -183,7 +190,31 @@ void loop() {
 
     } else {
       // Act as Goalie
-      // Pass
+
+      ballAngle = ball.getDeg();
+      ballIntensity = max(frontHigh, backHigh);
+
+      if (
+        (abs(ballAngle - ballPrevAngle) <= BALL_STATIONARY_ANGLE_THRESH)
+        && (abs(ballIntensity - ballPrevIntensity) <= BALL_STATIONARY_IR_THRESH)
+        && (ballIntensity >= NO_BALL_THRESH)
+      ) {
+        timeCurrent = millis();
+      } else {
+        timeBallNotStationary = timeCurrent = millis();
+      }
+
+      if ((timeCurrent - timeBallNotStationary) >= BOT_TRANSITION_TIME) {
+        isBotGoalieStriker = true;
+      }
+      
+      // Check for false ball
+      if (max(frontHigh, backHigh) < NO_BALL_THRESH) {
+        isBotGoalieStriker = false;
+      }
+
+      ballPrevAngle = ballAngle;
+      ballPrevIntensity = ballIntensity;
     }
   } else {
     // Yes - Bot is in posession of the ball
