@@ -169,28 +169,11 @@ void loop() {
 
   // Does the bot have the ball? Or is the ball stationary?
 
-  if ((irFront.maxVal() <= 120) && (irFront.maxChannel() != 4)) {
+  if ((frontHigh <= 120) && (irFront.maxChannel() != 4)) {
     // No - Ball far - High light intensity - TEMT reading above threshold (2021 bot)
-    // No - Front IR reading below threshold (2019 bot) 
-    if (isBotStriker) {
-      // Move towards ball - Ball track
-
-      Serial.println("3. Bot does not have ball - Moving towards ball");
-
-      ballTrack();
-
-      Serial.print(" (");
-      Serial.print(slowdownSpeed());
-      Serial.print(") (");
-      Serial.print(moveAngle);
-      Serial.print(") (");
-      Serial.print(rotationRate);
-      Serial.println(")");
-      return;
-
-    } else {
-      // Act as Goalie
-
+    // No - Front IR reading below threshold (2019 bot)
+    if (!isBotStriker) {
+      // Bot is goalie - Do stationary ball check
       ballAngle = ball.getDeg();
       ballIntensity = max(frontHigh, backHigh);
 
@@ -215,6 +198,28 @@ void loop() {
 
       ballPrevAngle = ballAngle;
       ballPrevIntensity = ballIntensity;
+    }
+
+    if (isBotStriker || isBotGoalieStriker) {
+      // Bot is striker or goalie-striker
+      // Move towards ball - Ball track
+
+      Serial.println("3. Bot does not have ball - Moving towards ball");
+
+      ballTrack();
+
+      Serial.print(" (");
+      Serial.print(slowdownSpeed());
+      Serial.print(") (");
+      Serial.print(moveAngle);
+      Serial.print(") (");
+      Serial.print(rotationRate);
+      Serial.println(")");
+      return;
+
+    } else {
+      // Act as Goalie
+      // Pass
     }
   } else {
     // Yes - Bot is in posession of the ball
